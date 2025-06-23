@@ -1,0 +1,127 @@
+{% extends 'electric_services/base.html' %}
+{% load static %}
+
+{% block title %}User Profile - VoltFix{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header-section bg-gradient">
+    <div class="container-modern">
+        <div class="text-center fade-in">
+            <h1 class="heading-primary text-gradient">User Profile</h1>
+            <p class="text-lead" style="color: var(--text-secondary);">
+                Manage your profile, orders, and settings.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Profile Section -->
+<section class="section-padding">
+    <div class="container-modern">
+        <div class="row g-5">
+            <!-- Profile Sidebar -->
+            <div class="col-lg-4">
+                <div class="card-modern p-4 text-center">
+                    {% if user.profile.image %}
+                        <img src="{{ user.profile.image.url }}" class="rounded-circle mx-auto mb-3" style="width: 120px; height: 120px; object-fit: cover;">
+                    {% else %}
+                        <div class="bg-primary-light rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 120px; height: 120px;">
+                            <i class="fas fa-user text-primary" style="font-size: 3rem;"></i>
+                        </div>
+                    {% endif %}
+                    <h4 class="mb-1">{{ user.get_full_name|default:user.username }}</h4>
+                    <p class="text-secondary">{{ user.email }}</p>
+                </div>
+            </div>
+
+            <!-- Profile Content -->
+            <div class="col-lg-8">
+                <div class="card-modern p-4">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <h4 class="mb-4">Personal Information</h4>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="{{ user_form.first_name.id_for_label }}" class="form-label">First Name</label>
+                                {{ user_form.first_name }}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ user_form.last_name.id_for_label }}" class="form-label">Last Name</label>
+                                {{ user_form.last_name }}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ user_form.email.id_for_label }}" class="form-label">Email</label>
+                                {{ user_form.email }}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ profile_form.phone_number.id_for_label }}" class="form-label">Phone Number</label>
+                                {{ profile_form.phone_number }}
+                            </div>
+                            <div class="col-12">
+                                <label for="{{ profile_form.profile_picture.id_for_label }}" class="form-label">Profile Picture</label>
+                                {{ profile_form.profile_picture }}
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <h4 class="mb-4">Shipping Address</h4>
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label for="{{ profile_form.address_line_1.id_for_label }}" class="form-label">Address Line 1</label>
+                                {{ profile_form.address_line_1 }}
+                            </div>
+                            <div class="col-12">
+                                <label for="{{ profile_form.address_line_2.id_for_label }}" class="form-label">Address Line 2</label>
+                                {{ profile_form.address_line_2 }}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ profile_form.city.id_for_label }}" class="form-label">City</label>
+                                {{ profile_form.city }}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ profile_form.state_province_region.id_for_label }}" class="form-label">State/Province</label>
+                                {{ profile_form.state_province_region }}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ profile_form.postal_code.id_for_label }}" class="form-label">Postal Code</label>
+                                {{ profile_form.postal_code }}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ profile_form.country.id_for_label }}" class="form-label">Country</label>
+                                {{ profile_form.country }}
+                            </div>
+                        </div>
+
+                        <div class="col-12 mt-4">
+                            <button type="submit" class="btn btn-primary-modern">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Custom styles for profile forms to integrate with modern design */
+    input[type="text"], input[type="email"], input[type="file"] {
+        width: 100%;
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: white;
+    }
+    input:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+        outline: none;
+    }
+</style>
+{% endblock %} 

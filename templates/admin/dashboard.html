@@ -1,0 +1,320 @@
+{% extends 'electric_services/base.html' %}
+
+{% block title %}Admin Dashboard - VoltFix{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="fw-bold electric-gradient">
+                <i class="fas fa-tachometer-alt me-2"></i>Admin Dashboard
+            </h1>
+            <p class="text-muted">Welcome to VoltFix Administration Panel</p>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="row g-4 mb-4">
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="fw-bold">{{ total_products }}</h4>
+                            <p class="mb-0">Total Products</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-box fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="fw-bold">{{ active_products }}</h4>
+                            <p class="mb-0">Active Products</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-check-circle fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="fw-bold">{{ total_users }}</h4>
+                            <p class="mb-0">Total Users</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="fw-bold">{{ active_carts }}</h4>
+                            <p class="mb-0">Active Carts</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-shopping-cart fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alerts -->
+    <div class="row g-4 mb-4">
+        {% if out_of_stock > 0 %}
+        <div class="col-md-6">
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <strong>{{ out_of_stock }}</strong> products are out of stock
+            </div>
+        </div>
+        {% endif %}
+        {% if low_stock > 0 %}
+        <div class="col-md-6">
+            <div class="alert alert-warning">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                <strong>{{ low_stock }}</strong> products have low stock
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Main Content -->
+    <div class="row g-4">
+        <!-- Top Products -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="fw-bold mb-0">
+                        <i class="fas fa-star me-2"></i>Top Rated Products
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if top_products %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Rating</th>
+                                    <th>Price</th>
+                                    <th>Stock</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in top_products %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            {% if product.image %}
+                                                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="rounded me-2" style="width: 40px; height: 40px; object-fit: cover;">
+                                            {% else %}
+                                                <div class="bg-light rounded d-flex align-items-center justify-content-center me-2" style="width: 40px; height: 40px;">
+                                                    <i class="fas fa-image text-muted"></i>
+                                                </div>
+                                            {% endif %}
+                                            <div>
+                                                <div class="fw-bold">{{ product.name }}</div>
+                                                <small class="text-muted">{{ product.category.name }}</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="text-warning">
+                                            {% for i in "12345" %}
+                                                {% if forloop.counter <= product.rating %}
+                                                    <i class="fas fa-star"></i>
+                                                {% else %}
+                                                    <i class="far fa-star"></i>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </span>
+                                        <small class="text-muted">({{ product.rating }})</small>
+                                    </td>
+                                    <td>${{ product.price }}</td>
+                                    <td>
+                                        {% if product.stock_quantity == 0 %}
+                                            <span class="badge bg-danger">Out</span>
+                                        {% elif product.stock_quantity <= 10 %}
+                                            <span class="badge bg-warning">{{ product.stock_quantity }}</span>
+                                        {% else %}
+                                            <span class="badge bg-success">{{ product.stock_quantity }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-muted text-center">No products with ratings yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Reviews -->
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="fw-bold mb-0">
+                        <i class="fas fa-comments me-2"></i>Recent Reviews
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if recent_reviews %}
+                    <div class="reviews-list">
+                        {% for review in recent_reviews %}
+                        <div class="review-item border-bottom pb-3 mb-3">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <div class="fw-bold">{{ review.user.get_full_name|default:review.user.username }}</div>
+                                    <div class="text-muted small">{{ review.product.name }}</div>
+                                </div>
+                                <div class="text-warning">
+                                    {% for i in "12345" %}
+                                        {% if forloop.counter <= review.rating %}
+                                            <i class="fas fa-star"></i>
+                                        {% else %}
+                                            <i class="far fa-star"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <p class="mb-1">{{ review.comment|truncatewords:20 }}</p>
+                            <small class="text-muted">{{ review.created_at|date:"M j, Y" }}</small>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-muted text-center">No reviews yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Statistics -->
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="fw-bold mb-0">
+                        <i class="fas fa-chart-pie me-2"></i>Category Statistics
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if categories %}
+                    <div class="row">
+                        {% for category in categories %}
+                        <div class="col-md-4 mb-3">
+                            <div class="category-stat p-3 border rounded">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="fw-bold mb-1">{{ category.name }}</h6>
+                                        <p class="text-muted mb-0">{{ category.product_count }} products</p>
+                                    </div>
+                                    <div>
+                                        <i class="{{ category.icon }}" style="font-size: 2rem; color: {{ category.color }};"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <p class="text-muted text-center">No categories created yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="fw-bold mb-0">
+                        <i class="fas fa-bolt me-2"></i>Quick Actions
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <a href="/admin/electric_services/electricproduct/add/" class="btn btn-electric w-100">
+                                <i class="fas fa-plus me-2"></i>Add Product
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="/admin/electric_services/servicecategory/add/" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-folder-plus me-2"></i>Add Category
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="{% url 'admin_inventory' %}" class="btn btn-outline-warning w-100">
+                                <i class="fas fa-boxes me-2"></i>Inventory
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="{% url 'admin_analytics' %}" class="btn btn-outline-info w-100">
+                                <i class="fas fa-chart-line me-2"></i>Analytics
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .category-stat {
+        transition: all 0.3s ease;
+    }
+    
+    .category-stat:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .review-item:last-child {
+        border-bottom: none !important;
+    }
+    
+    .table th {
+        border-top: none;
+        font-weight: 600;
+    }
+    
+    .alert {
+        border: none;
+        border-radius: 10px;
+    }
+</style>
+{% endblock %} 

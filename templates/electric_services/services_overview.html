@@ -1,0 +1,48 @@
+{% extends 'electric_services/base.html' %}
+{% load static %}
+
+{% block title %}Our Services - VoltFix{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header-section bg-gradient">
+    <div class="container-modern">
+        <div class="text-center fade-in">
+            <h1 class="heading-primary text-gradient">Our Electric Services</h1>
+            <p class="text-lead" style="color: var(--text-secondary);">
+                Comprehensive solutions for all your electrical needs.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section class="section-padding">
+    <div class="container-modern">
+        <div class="grid-modern">
+            {% for category in categories %}
+                <div class="card-modern" data-delay="{{ forloop.counter0|divisibleby:3|yesno:'0.1s,0.2s,0.3s' }}">
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="bg-primary-light rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 60px; height: 60px;">
+                            <i class="{{ category.icon }} text-primary" style="font-size: 1.75rem;"></i>
+                        </div>
+                        <div>
+                            <h4 class="mb-0">{{ category.name }}</h4>
+                        </div>
+                    </div>
+                    <p class="text-secondary">{{ category.description }}</p>
+                    <a href="#" class="btn btn-secondary-modern mt-auto">
+                        Learn More <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <div class="card-modern text-center">
+                        <p class="text-lead">No services are available at the moment. Please check back later.</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %} 

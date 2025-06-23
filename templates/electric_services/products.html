@@ -1,0 +1,93 @@
+{% extends 'electric_services/base.html' %}
+{% load static %}
+
+{% block title %}Our Products - VoltFix{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header-section bg-gradient">
+    <div class="container-modern">
+        <div class="text-center fade-in">
+            <h1 class="heading-primary text-gradient">Our Electrical Products</h1>
+            <p class="text-lead" style="color: var(--text-secondary);">
+                High-quality products for all your electrical needs.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Products Section -->
+<section class="section-padding">
+    <div class="container-modern">
+        <!-- Filtering and Sorting -->
+        <div class="card-modern mb-5">
+            <form method="get" class="row g-3 align-items-center">
+                <div class="col-md-4">
+                    <input type="text" name="search" class="form-control-modern" placeholder="Search for products..." value="{{ request.GET.search }}">
+                </div>
+                <div class="col-md-3">
+                    <select name="category" class="form-control-modern">
+                        <option value="">All Categories</option>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"s" %}selected{% endif %}>
+                                {{ category.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select name="sort" class="form-control-modern">
+                        <option value="name_asc" {% if request.GET.sort == 'name_asc' %}selected{% endif %}>Sort by Name (A-Z)</option>
+                        <option value="name_desc" {% if request.GET.sort == 'name_desc' %}selected{% endif %}>Sort by Name (Z-A)</option>
+                        <option value="price_asc" {% if request.GET.sort == 'price_asc' %}selected{% endif %}>Sort by Price (Low-High)</option>
+                        <option value="price_desc" {% if request.GET.sort == 'price_desc' %}selected{% endif %}>Sort by Price (High-Low)</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary-modern w-100">
+                        <i class="fas fa-search me-2"></i>Filter
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Product Grid -->
+        <div class="grid-modern">
+            {% for product in products %}
+                <div class="card-modern" data-delay="{{ forloop.counter0|divisibleby:4|yesno:'0.1s,0.2s,0.3s,0.4s' }}">
+                    <a href="{% url 'product_detail' product.id %}" class="text-decoration-none">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid rounded mb-4" style="height: 200px; width: 100%; object-fit: cover;">
+                        {% else %}
+                            <div class="bg-light d-flex align-items-center justify-content-center rounded mb-4" style="height: 200px;">
+                                <i class="fas fa-bolt text-primary" style="font-size: 3rem;"></i>
+                            </div>
+                        {% endif %}
+                        <h5 class="mb-2">{{ product.name }}</h5>
+                        <p class="text-secondary small">{{ product.category.name }}</p>
+                    </a>
+                    
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div class="price">
+                            <h5 class="mb-0 text-primary">${{ product.price }}</h5>
+                        </div>
+                        <form action="{% url 'add_to_cart' product.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="quantity" value="1">
+                            <button type="submit" class="btn btn-secondary-modern">
+                                <i class="fas fa-cart-plus"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <div class="card-modern text-center">
+                        <p class="text-lead">No products found matching your criteria.</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %} 

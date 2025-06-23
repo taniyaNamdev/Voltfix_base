@@ -1,0 +1,86 @@
+/* VoltFix Custom Dark Red & White Theme */
+body {
+    background-color: #fff;
+    color: #1f2937;
+}
+
+/* Navbar Styling */
+.navbar {
+    background-color: #7f1d1d !important;
+    color: white !important;
+}
+
+.navbar-brand {
+    color: white !important;
+}
+
+.navbar-brand:hover {
+    color: #fef2f2 !important;
+}
+
+.nav-link {
+    color: white !important;
+}
+
+.nav-link:hover {
+    color: white !important;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.navbar-toggler:focus {
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25) !important;
+}
+
+/* Dropdown styling */
+.dropdown-menu {
+    background: white !important;
+    border: 1px solid #e5e7eb !important;
+}
+
+.dropdown-item {
+    color: #1f2937 !important;
+}
+
+.dropdown-item:hover {
+    background-color: #fef2f2 !important;
+    color: #7f1d1d !important;
+}
+
+/* General styling */
+.navbar, .footer, .bg-primary, .btn-primary, .btn-danger {
+    background-color: #7f1d1d !important;
+    color: #fff !important;
+}
+
+a, .text-primary, .text-danger {
+    color: #7f1d1d !important;
+}
+
+a:hover, .btn-primary:hover, .btn-danger:hover {
+    background-color: #5f1a1a !important;
+    color: #fff !important;
+}
+
+.card, .modal-content {
+    border-color: #7f1d1d;
+}
+
+.btn-light, .bg-white {
+    background-color: #fff !important;
+    color: #7f1d1d !important;
+}
+
+/* Ensure text visibility */
+.text-white {
+    color: white !important;
+}
+
+.text-dark {
+    color: #1f2937 !important;
+}
+
+/* Add more customizations as needed for your UI */ 

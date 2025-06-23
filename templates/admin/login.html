@@ -1,0 +1,184 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static jazzmin %}
+
+{% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" type="text/css" href="{% static 'css/admin-custom.css' %}">
+<style>
+    body {
+        background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        padding: 20px;
+    }
+    
+    .login-container {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        padding: 2.5rem;
+        max-width: 400px;
+        width: 100%;
+        text-align: center;
+    }
+    
+    .login-logo {
+        margin-bottom: 2rem;
+    }
+    
+    .login-logo i {
+        font-size: 3rem;
+        color: #7f1d1d;
+    }
+    
+    .login-title {
+        font-size: 1.875rem;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 0.5rem;
+        letter-spacing: -0.025em;
+    }
+    
+    .login-subtitle {
+        color: #6b7280;
+        margin-bottom: 2rem;
+        font-size: 1rem;
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+        text-align: left;
+    }
+    
+    .form-label {
+        display: block;
+        font-weight: 500;
+        color: #374151;
+        margin-bottom: 0.5rem;
+    }
+    
+    .form-control {
+        width: 100%;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        transition: all 0.2s ease;
+        background: white;
+    }
+    
+    .form-control:focus {
+        border-color: #7f1d1d;
+        box-shadow: 0 0 0 3px rgba(127, 29, 29, 0.1);
+        outline: none;
+    }
+    
+    .btn-login {
+        width: 100%;
+        background-color: #7f1d1d;
+        border-color: #7f1d1d;
+        color: white;
+        border-radius: 8px;
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        border: none;
+        cursor: pointer;
+    }
+    
+    .btn-login:hover {
+        background-color: #5f1a1a;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(127, 29, 29, 0.3);
+    }
+    
+    .error-message {
+        background-color: #fee2e2;
+        color: #991b1b;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        border: none;
+    }
+    
+    .help-text {
+        color: #6b7280;
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block bodyclass %}login-page{% endblock %}
+
+{% block nav-global %}{% endblock %}
+
+{% block content_title %}{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <div class="login-logo">
+        <i class="fas fa-bolt"></i>
+    </div>
+    
+    <h1 class="login-title">VoltFix Admin</h1>
+    <p class="login-subtitle">Sign in to your admin account</p>
+    
+    {% if form.errors and not form.non_field_errors %}
+        <div class="error-message">
+            {% if form.errors.items|length == 1 %}{% trans "Please correct the error below." %}{% else %}{% trans "Please correct the errors below." %}{% endif %}
+        </div>
+    {% endif %}
+    
+    {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+            <div class="error-message">
+                {{ error }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    
+    <form action="{{ app_path }}" method="post" id="login-form">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="id_username" class="form-label">{% trans 'Username:' %}</label>
+            {{ form.username }}
+            {% if form.username.errors %}
+                <div class="help-text">{{ form.username.errors.0 }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="id_password" class="form-label">{% trans 'Password:' %}</label>
+            {{ form.password }}
+            {% if form.password.errors %}
+                <div class="help-text">{{ form.password.errors.0 }}</div>
+            {% endif %}
+        </div>
+        
+        <input type="hidden" name="next" value="{{ next }}">
+        
+        <button type="submit" class="btn-login">
+            {% trans 'Log in' %}
+        </button>
+    </form>
+    
+    {% url 'admin_password_reset' as password_reset_url %}
+    {% if password_reset_url %}
+        <div class="help-text" style="margin-top: 1rem;">
+            <a href="{{ password_reset_url }}" style="color: #dc2626; text-decoration: none;">
+                {% trans 'Forgotten your password?' %}
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %} 

@@ -1,0 +1,123 @@
+{% extends 'electric_services/base.html' %}
+{% load static %}
+
+{% block title %}Shopping Cart - VoltFix{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header-section bg-gradient">
+    <div class="container-modern">
+        <div class="text-center fade-in">
+            <h1 class="heading-primary text-gradient">Shopping Cart</h1>
+            <p class="text-lead" style="color: var(--text-secondary);">
+                Review your items and proceed to checkout.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Cart Section -->
+<section class="section-padding">
+    <div class="container-modern">
+        {% if cart_items %}
+            <div class="row g-5">
+                <!-- Cart Items -->
+                <div class="col-lg-8">
+                    <div class="card-modern p-4">
+                        {% for item in cart_items %}
+                            <div class="d-flex align-items-center mb-4">
+                                <img src="{{ item.product.image.url }}" class="img-fluid rounded me-4" style="width: 100px; height: 100px; object-fit: cover;" alt="{{ item.product.name }}">
+                                <div class="flex-grow-1">
+                                    <h5 class="mb-1">{{ item.product.name }}</h5>
+                                    <p class="text-secondary small">Unit Price: ${{ item.product.price }}</p>
+                                    <form action="{% url 'update_cart' item.id %}" method="post" class="d-flex align-items-center">
+                                        {% csrf_token %}
+                                        <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="form-control-modern me-2" style="width: 80px;">
+                                        <button type="submit" class="btn btn-secondary-modern btn-sm">Update</button>
+                                    </form>
+                                </div>
+                                <div class="text-end">
+                                    <h5 class="text-primary">${{ item.get_total }}</h5>
+                                    <a href="{% url 'remove_from_cart' item.id %}" class="text-danger small text-decoration-none">
+                                        <i class="fas fa-trash me-1"></i>Remove
+                                    </a>
+                                </div>
+                            </div>
+                            {% if not forloop.last %}<hr class="my-4">{% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="col-lg-4">
+                    <div class="card-modern p-4">
+                        <h4 class="mb-4">Order Summary</h4>
+                        <ul class="list-unstyled mb-4">
+                            <li class="d-flex justify-content-between mb-2">
+                                <span class="text-secondary">Subtotal</span>
+                                <strong>${{ total_price }}</strong>
+                            </li>
+                            <li class="d-flex justify-content-between mb-2">
+                                <span class="text-secondary">Tax (5%)</span>
+                                <strong>${{ tax_amount|floatformat:2 }}</strong>
+                            </li>
+                            <li class="d-flex justify-content-between mb-2">
+                                <span class="text-secondary">Shipping</span>
+                                <strong>$0.00</strong>
+                            </li>
+                            <hr>
+                            <li class="d-flex justify-content-between h4">
+                                <span>Total</span>
+                                <strong class="text-primary">${{ final_price|floatformat:2 }}</strong>
+                            </li>
+                        </ul>
+                        <a href="#" class="btn btn-primary-modern w-100">
+                            Proceed to Checkout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="text-center">
+                <div class="card-modern d-inline-block p-5">
+                    <i class="fas fa-shopping-cart text-primary mb-4" style="font-size: 4rem;"></i>
+                    <h2 class="heading-secondary">Your Cart is Empty</h2>
+                    <p class="text-lead">Browse our products to add items to your cart.</p>
+                    <a href="{% url 'products' %}" class="btn btn-primary-modern">
+                        Shop Now
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .btn-electric {
+        background: linear-gradient(45deg, var(--electric-blue), var(--electric-purple));
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 12px 30px;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+    }
+    .btn-electric:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 212, 255, 0.4);
+        color: white;
+    }
+    .form-control:focus {
+        border-color: var(--electric-blue);
+        box-shadow: 0 0 0 0.2rem rgba(0, 212, 255, 0.25);
+    }
+    .card {
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        border: none;
+    }
+</style>
+{% endblock %} 

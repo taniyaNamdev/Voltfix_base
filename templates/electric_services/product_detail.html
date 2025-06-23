@@ -1,0 +1,110 @@
+{% extends 'electric_services/base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }} - VoltFix{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header-section bg-gradient">
+    <div class="container-modern">
+        <div class="text-center fade-in">
+            <h1 class="heading-primary text-gradient">{{ product.name }}</h1>
+            <p class="text-lead" style="color: var(--text-secondary);">
+                {{ product.category.name }}
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Product Detail Section -->
+<section class="section-padding">
+    <div class="container-modern">
+        <div class="row g-5">
+            <!-- Product Image -->
+            <div class="col-lg-6">
+                <div class="card-modern p-4">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid rounded">
+                    {% else %}
+                        <div class="bg-light d-flex align-items-center justify-content-center rounded" style="height: 400px;">
+                            <i class="fas fa-bolt text-primary" style="font-size: 5rem;"></i>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Product Info -->
+            <div class="col-lg-6">
+                <div class="d-flex flex-column h-100">
+                    <h2 class="heading-secondary">{{ product.name }}</h2>
+                    <p class="text-secondary">{{ product.description }}</p>
+
+                    <div class="d-flex align-items-center my-4">
+                        <h3 class="mb-0 text-primary me-3">${{ product.price }}</h3>
+                        <span class="badge bg-primary-light text-primary p-2">{{ product.get_condition_display }}</span>
+                    </div>
+
+                    <form action="{% url 'add_to_cart' product.id %}" method="post" class="mt-auto">
+                        {% csrf_token %}
+                        <div class="d-flex align-items-center gap-3">
+                            <label for="quantity" class="form-label mb-0">Quantity:</label>
+                            <input type="number" name="quantity" id="quantity" value="1" min="1" class="form-control-modern" style="width: 100px;">
+                            <button type="submit" class="btn btn-primary-modern flex-grow-1">
+                                <i class="fas fa-cart-plus me-2"></i>Add to Cart
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Product Reviews Section -->
+<section class="section-padding bg-light">
+    <div class="container-modern">
+        <h2 class="heading-secondary text-center mb-5">Customer Reviews</h2>
+        <div class="row g-4">
+            {% for review in reviews %}
+                <div class="col-lg-6">
+                    <div class="card-modern h-100">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-primary-light rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                <i class="fas fa-user text-primary"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0">{{ review.user.username }}</h6>
+                                <small class="text-secondary">{{ review.created_at|date:"F d, Y" }}</small>
+                            </div>
+                        </div>
+                        <p class="text-secondary">"{{ review.comment }}"</p>
+                        <div class="text-warning mt-auto">
+                            {% for i in "12345" %}
+                                <i class="{% if forloop.counter <= review.rating %}fas{% else %}far{% endif %} fa-star"></i>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <div class="card-modern text-center">
+                        <p class="text-lead">No reviews for this product yet.</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Add Review Form -->
+        {% if user.is_authenticated %}
+        <div class="card-modern mt-5">
+            <h4 class="mb-4">Leave a Review</h4>
+            <form method="post">
+                {% csrf_token %}
+                {{ review_form.as_p }}
+                <button type="submit" class="btn btn-primary-modern">Submit Review</button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %} 

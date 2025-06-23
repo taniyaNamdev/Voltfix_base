@@ -1,0 +1,85 @@
+{% extends 'electric_services/base.html' %}
+
+{% block title %}Logout - VoltFix{% endblock %}
+
+{% block content %}
+<section class="section-padding">
+    <div class="container-modern">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card-modern p-5 text-center">
+                    <div class="mb-4">
+                        <i class="fas fa-sign-out-alt text-primary" style="font-size: 3rem;"></i>
+                    </div>
+                    <h2 class="heading-secondary">Logout</h2>
+                    <p class="text-lead">
+                        Are you sure you want to log out?
+                    </p>
+
+                    <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <div class="d-flex gap-3 justify-content-center mt-4">
+                            <button type="submit" class="btn btn-primary-modern">Logout</button>
+                            <a href="{% url 'welcome' %}" class="btn btn-secondary-modern">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .electric-sphere {
+        position: relative;
+    }
+
+    .electric-sphere::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 150px;
+        height: 150px;
+        background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+        border-radius: 50%;
+        animation: pulse 3s infinite;
+    }
+
+    .btn {
+        border-radius: 25px;
+        padding: 12px 30px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+    }
+
+    .btn-danger {
+        background: linear-gradient(45deg, #dc3545, #c82333);
+        border: none;
+        box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+    }
+
+    .btn-danger:hover {
+        box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+        color: white;
+    }
+
+    .btn-outline-secondary {
+        border: 2px solid #6c757d;
+        color: #6c757d;
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: white;
+    }
+</style>
+{% endblock %} 

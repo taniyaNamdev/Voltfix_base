@@ -1,0 +1,70 @@
+{% extends 'electric_services/base.html' %}
+{% load static %}
+
+{% block title %}Create Account - VoltFix{% endblock %}
+
+{% block content %}
+<section class="section-padding">
+    <div class="container-modern">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card-modern p-5 text-center">
+                    <div class="mb-4">
+                        <i class="fas fa-user-plus text-primary" style="font-size: 3rem;"></i>
+                    </div>
+                    <h2 class="heading-secondary">Create an Account</h2>
+                    <p class="text-lead" style="font-size: 1rem;">
+                        Join VoltFix to access our services and products.
+                    </p>
+
+                    <form method="post" class="text-start mt-4">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-primary-modern btn-lg">Register</button>
+                        </div>
+                    </form>
+
+                    <p class="mt-4 text-secondary">
+                        Already have an account? <a href="{% url 'login' %}" class="text-primary text-decoration-none">Log in</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .card-modern form p {
+        margin-bottom: 1rem;
+    }
+    .card-modern form label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+    }
+    input[type="text"], input[type="email"], input[type="password"] {
+        width: 100%;
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: white;
+    }
+    input:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+        outline: none;
+    }
+    .errorlist {
+        list-style-type: none;
+        padding: 0;
+        color: var(--primary-color);
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+    }
+</style>
+{% endblock %} 
