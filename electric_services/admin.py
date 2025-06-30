@@ -4,7 +4,8 @@ from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.db.models import Count, Sum, Avg
 from django.contrib.admin import SimpleListFilter
-from .models import UserProfile, ServiceCategory, ElectricProduct, ProductReview, ShoppingCart, CartItem
+from .models import UserProfile, ServiceCategory, ElectricService, ProductCategory, ElectricProduct, ProductReview, ShoppingCart, CartItem, ServiceBooking, QuoteRequest
+from django.utils import timezone
 
 # Custom Admin Site Configuration
 admin.site.site_header = "VoltFix Admin Panel"
@@ -62,10 +63,111 @@ class UserProfileAdmin(admin.ModelAdmin):
 
 @admin.register(ServiceCategory)
 class ServiceCategoryAdmin(admin.ModelAdmin):
-    list_display = ['name', 'icon_display', 'color_display', 'product_count', 'created_at']
+    list_display = ['name', 'image_display', 'icon_display', 'color_display', 'service_count', 'created_at']
     search_fields = ['name', 'description']
     list_filter = ['created_at']
     prepopulated_fields = {'name': ('name',)}
+    fieldsets = (
+        ('Basic Information', {
+            'fields': ('name', 'description')
+        }),
+        ('Visual Elements', {
+            'fields': ('image', 'icon', 'color')
+        }),
+        ('Timestamps', {
+            'fields': ('created_at',),
+            'classes': ('collapse',)
+        }),
+    )
+    readonly_fields = ['created_at']
+    
+    def image_display(self, obj):
+        if obj.image:
+            return format_html('<img src="{}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;" />', obj.image.url)
+        return format_html('<div style="width: 50px; height: 50px; background: #f0f0f0; border-radius: 5px; display: flex; align-items: center; justify-content: center;"><i class="fas fa-image"></i></div>')
+    image_display.short_description = 'Image'
+    
+    def icon_display(self, obj):
+        return format_html('<i class="{}" style="font-size: 1.5rem; color: {};"></i>', obj.icon, obj.color)
+    icon_display.short_description = 'Icon'
+    
+    def color_display(self, obj):
+        return format_html('<div style="width: 30px; height: 30px; background: {}; border-radius: 5px;"></div>', obj.color)
+    color_display.short_description = 'Color'
+    
+    def service_count(self, obj):
+        count = obj.services.count()
+        return format_html('<span class="badge bg-primary">{}</span>', count)
+    service_count.short_description = 'Services'
+
+@admin.register(ElectricService)
+class ElectricServiceAdmin(admin.ModelAdmin):
+    list_display = ['name', 'category', 'price_display', 'duration', 'is_active', 'image_display']
+    list_filter = ['category', 'is_active', 'created_at']
+    search_fields = ['name', 'description', 'category__name']
+    list_editable = ['is_active']
+    readonly_fields = ['created_at']
+    fieldsets = (
+        ('Basic Information', {
+            'fields': ('name', 'description', 'category')
+        }),
+        ('Service Details', {
+            'fields': ('price', 'duration')
+        }),
+        ('Media', {
+            'fields': ('image',)
+        }),
+        ('Settings', {
+            'fields': ('is_active',)
+        }),
+        ('Timestamps', {
+            'fields': ('created_at',),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    def price_display(self, obj):
+        return format_html('<span style="color: #28a745; font-weight: bold;">${}</span>', obj.price)
+    price_display.short_description = 'Price'
+    
+    def image_display(self, obj):
+        if obj.image:
+            return format_html('<img src="{}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;" />', obj.image.url)
+        return format_html('<div style="width: 50px; height: 50px; background: #f0f0f0; border-radius: 5px; display: flex; align-items: center; justify-content: center;"><i class="fas fa-image"></i></div>')
+    image_display.short_description = 'Image'
+
+@admin.register(ProductCategory)
+class ProductCategoryAdmin(admin.ModelAdmin):
+    list_display = ['name', 'gst_rate_display', 'image_display', 'icon_display', 'color_display', 'product_count', 'created_at']
+    search_fields = ['name', 'description']
+    list_filter = ['gst_rate', 'created_at']
+    prepopulated_fields = {'name': ('name',)}
+    fieldsets = (
+        ('Basic Information', {
+            'fields': ('name', 'description')
+        }),
+        ('Visual Elements', {
+            'fields': ('image', 'icon', 'color')
+        }),
+        ('Tax Configuration', {
+            'fields': ('gst_rate',)
+        }),
+        ('Timestamps', {
+            'fields': ('created_at',),
+            'classes': ('collapse',)
+        }),
+    )
+    readonly_fields = ['created_at']
+    
+    def gst_rate_display(self, obj):
+        return format_html('<span class="badge bg-info">{}</span>', f"{obj.gst_rate}%")
+    gst_rate_display.short_description = 'GST Rate'
+    
+    def image_display(self, obj):
+        if obj.image:
+            return format_html('<img src="{}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;" />', obj.image.url)
+        return format_html('<div style="width: 50px; height: 50px; background: #f0f0f0; border-radius: 5px; display: flex; align-items: center; justify-content: center;"><i class="fas fa-image"></i></div>')
+    image_display.short_description = 'Image'
     
     def icon_display(self, obj):
         return format_html('<i class="{}" style="font-size: 1.5rem; color: {};"></i>', obj.icon, obj.color)
@@ -76,8 +178,8 @@ class ServiceCategoryAdmin(admin.ModelAdmin):
     color_display.short_description = 'Color'
     
     def product_count(self, obj):
-        count = obj.electricproduct_set.count()
-        return format_html('<span class="badge bg-primary">{}</span>', count)
+        count = obj.products.count()
+        return format_html('<span class="badge bg-success">{}</span>', count)
     product_count.short_description = 'Products'
 
 @admin.register(ElectricProduct)
@@ -181,8 +283,50 @@ class CartItemAdmin(admin.ModelAdmin):
     readonly_fields = ['added_at']
     
     def total_price_display(self, obj):
-        return format_html('<span style="color: #28a745; font-weight: bold;">${}</span>', obj.total_price)
+        return format_html('<span style="color: #28a745; font-weight: bold;">₹{}</span>', obj.total_price)
     total_price_display.short_description = 'Total Price'
+
+@admin.register(QuoteRequest)
+class QuoteRequestAdmin(admin.ModelAdmin):
+    list_display = ['name', 'email', 'service_type', 'status', 'created_at']
+    list_filter = ['status', 'service_type', 'created_at']
+    search_fields = ['name', 'email', 'message']
+    readonly_fields = ['created_at', 'updated_at']
+    list_per_page = 20
+    
+    fieldsets = (
+        ('Contact Information', {
+            'fields': ('name', 'email', 'phone')
+        }),
+        ('Quote Details', {
+            'fields': ('service_type', 'message')
+        }),
+        ('Status & Management', {
+            'fields': ('status', 'estimated_price', 'admin_notes')
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    actions = ['mark_as_reviewed', 'mark_as_quoted', 'mark_as_accepted', 'mark_as_rejected']
+    
+    def mark_as_reviewed(self, request, queryset):
+        queryset.update(status='reviewed')
+    mark_as_reviewed.short_description = "Mark selected quotes as reviewed"
+    
+    def mark_as_quoted(self, request, queryset):
+        queryset.update(status='quoted')
+    mark_as_quoted.short_description = "Mark selected quotes as quoted"
+    
+    def mark_as_accepted(self, request, queryset):
+        queryset.update(status='accepted')
+    mark_as_accepted.short_description = "Mark selected quotes as accepted"
+    
+    def mark_as_rejected(self, request, queryset):
+        queryset.update(status='rejected')
+    mark_as_rejected.short_description = "Mark selected quotes as rejected"
 
 # Custom Admin Actions
 @admin.action(description="Mark selected products as featured")
@@ -207,3 +351,87 @@ deactivate_products.short_description = "Deactivate selected products"
 
 # Add actions to ElectricProductAdmin
 ElectricProductAdmin.actions = [make_featured, make_not_featured, activate_products, deactivate_products]
+
+@admin.register(ServiceBooking)
+class ServiceBookingAdmin(admin.ModelAdmin):
+    list_display = ['user', 'service', 'status', 'priority', 'preferred_date', 'contact_phone', 'city', 'estimated_cost']
+    list_filter = ['status', 'priority', 'property_type', 'payment_method', 'payment_status', 'preferred_date', 'booked_at']
+    search_fields = ['user__username', 'user__email', 'contact_phone', 'contact_email', 'address_line_1', 'city', 'service_description']
+    readonly_fields = ['booked_at', 'updated_at']
+    list_per_page = 20
+    date_hierarchy = 'booked_at'
+    
+    fieldsets = (
+        ('Basic Information', {
+            'fields': ('user', 'service', 'status', 'priority')
+        }),
+        ('Location Details', {
+            'fields': ('address_line_1', 'address_line_2', 'city', 'state_province', 'postal_code', 'country')
+        }),
+        ('Contact Information', {
+            'fields': ('contact_phone', 'contact_email', 'alternate_phone')
+        }),
+        ('Scheduling', {
+            'fields': ('preferred_date', 'preferred_time_slot', 'scheduled_date', 'completed_date')
+        }),
+        ('Service Details', {
+            'fields': ('property_type', 'service_description', 'special_requirements')
+        }),
+        ('Pricing & Payment', {
+            'fields': ('estimated_cost', 'final_cost', 'payment_method', 'payment_status')
+        }),
+        ('Administration', {
+            'fields': ('assigned_technician', 'admin_notes'),
+            'classes': ('collapse',)
+        }),
+        ('Timestamps', {
+            'fields': ('booked_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+    
+    actions = [
+        'mark_as_pending', 'mark_as_confirmed', 'mark_as_in_progress', 
+        'mark_as_completed', 'mark_as_cancelled', 'mark_as_paid'
+    ]
+    
+    def mark_as_pending(self, request, queryset):
+        queryset.update(status='pending')
+    mark_as_pending.short_description = "Mark selected bookings as pending"
+    
+    def mark_as_confirmed(self, request, queryset):
+        queryset.update(status='confirmed')
+    mark_as_confirmed.short_description = "Mark selected bookings as confirmed"
+    
+    def mark_as_in_progress(self, request, queryset):
+        queryset.update(status='in_progress')
+    mark_as_in_progress.short_description = "Mark selected bookings as in progress"
+    
+    def mark_as_completed(self, request, queryset):
+        queryset.update(status='completed', completed_date=timezone.now())
+    mark_as_completed.short_description = "Mark selected bookings as completed"
+    
+    def mark_as_cancelled(self, request, queryset):
+        queryset.update(status='cancelled')
+    mark_as_cancelled.short_description = "Mark selected bookings as cancelled"
+    
+    def mark_as_paid(self, request, queryset):
+        queryset.update(payment_status='paid')
+    mark_as_paid.short_description = "Mark selected bookings as paid"
+    
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related('user', 'service', 'assigned_technician')
+    
+    def full_address(self, obj):
+        return obj.full_address
+    full_address.short_description = 'Full Address'
+    
+    def is_emergency(self, obj):
+        return obj.is_emergency
+    is_emergency.boolean = True
+    is_emergency.short_description = 'Emergency'
+    
+    def is_overdue(self, obj):
+        return obj.is_overdue
+    is_overdue.boolean = True
+    is_overdue.short_description = 'Overdue'

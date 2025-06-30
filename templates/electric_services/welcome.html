@@ -3,41 +3,151 @@
 {% block title %}VoltFix - Your Home's Electrical Partner{% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
-<section class="section-padding bg-gradient">
-    <div class="container-modern">
+<!-- Hero Section - Mistri Style -->
+<section class="hero-section" style="background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1621905251189-08b45d6a269e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80') center/cover; min-height: 100vh; display: flex; align-items: center; position: relative;">
+    <div class="container">
         <div class="row align-items-center">
-            <div class="col-lg-6 slide-in-left" data-delay="0.2s">
-                <h1 class="heading-primary">
-                    VoltFix - Your Home's <span class="text-gradient">Electrical</span> Partner
-                </h1>
-                <p class="text-lead">
-                    Professional electrical services and premium products to keep your home safe, 
-                    efficient, and powered for the future. Trust VoltFix for all your electrical needs.
-                </p>
-                <div class="d-flex gap-3 flex-wrap">
-                    <a href="{% url 'services_overview' %}" class="btn btn-primary-modern">
-                        <i class="fas fa-tools me-2"></i>Our Services
-                    </a>
-                    <a href="{% url 'products' %}" class="btn btn-secondary-modern">
-                        <i class="fas fa-shopping-cart me-2"></i>Shop Products
-                    </a>
-                </div>
-            </div>
-            <div class="col-lg-6 slide-in-right" data-delay="0.4s">
-                <div class="text-center">
-                    <div class="position-relative d-inline-block">
-                        <div class="bg-primary-light rounded-circle p-5 mb-4" style="width: 300px; height: 300px;">
-                            <i class="fas fa-bolt text-primary" style="font-size: 4rem;"></i>
-                        </div>
-                        <div class="position-absolute top-0 start-100 translate-middle">
-                            <div class="bg-white rounded-circle p-3 shadow-lg">
-                                <i class="fas fa-shield-alt text-success" style="font-size: 1.5rem;"></i>
+            <div class="col-lg-6" data-aos="fade-right">
+                <div class="hero-content text-white">
+                    <h6 class="text-uppercase mb-3" style="color: var(--primary-light); font-weight: 600; letter-spacing: 2px;">Since 2008</h6>
+                    <h1 class="display-3 fw-bold mb-4" style="font-family: 'Poppins', sans-serif;">
+                        PROVIDING POWER<br>
+                        <span style="color: var(--primary-light);">SO YOU CAN GO HIGHER</span>
+                    </h1>
+                    <p class="lead mb-4" style="font-size: 1.2rem; line-height: 1.8;">
+                        Professional electrical services and premium products to keep your home safe, 
+                        efficient, and powered for the future. Trust VoltFix for all your electrical needs.
+                    </p>
+                    <div class="hero-stats mb-4">
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="text-center">
+                                    <h3 class="fw-bold text-primary-mistri" data-target="15">0</h3>
+                                    <small class="text-light">Years Experience</small>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="text-center">
+                                    <h3 class="fw-bold text-primary-mistri" data-target="500">0</h3>
+                                    <small class="text-light">Projects Completed</small>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="text-center">
+                                    <h3 class="fw-bold text-primary-mistri" data-target="1500">0</h3>
+                                    <small class="text-light">Happy Customers</small>
+                                </div>
                             </div>
                         </div>
-                        <div class="position-absolute bottom-0 start-0 translate-middle">
-                            <div class="bg-white rounded-circle p-3 shadow-lg">
-                                <i class="fas fa-clock text-warning" style="font-size: 1.5rem;"></i>
+                    </div>
+                    <div class="hero-buttons">
+                        <a href="{% url 'services_overview' %}" class="btn btn-primary-mistri me-3">
+                            <i class="fas fa-tools me-2"></i>Discover Our Services
+                        </a>
+                        <a href="{% url 'products' %}" class="btn btn-secondary-mistri">
+                            <i class="fas fa-shopping-cart me-2"></i>Shop Products
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6" data-aos="fade-left">
+                <div class="hero-image text-center">
+                    <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" alt="Electrical Services" class="img-fluid rounded-3" style="max-width: 500px; box-shadow: var(--shadow-lg);">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Free Consultation Banner - Prominent Section -->
+<section class="section-padding" style="background: #CFF4FC; position: relative; overflow: hidden;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8" data-aos="fade-right">
+                <div class="consultation-content text-dark">
+                    <div class="consultation-badge mb-3">
+                        <span class="badge bg-dark text-warning px-3 py-2" style="font-size: 1rem; font-weight: 700;">
+                            <i class="fas fa-star me-2"></i>LIMITED TIME OFFER
+                        </span>
+                    </div>
+                    <h2 class="display-5 fw-bold mb-3 text-dark">
+                        FREE CONSULTATION
+                    </h2>
+                    <h4 class="mb-4 text-dark" style="font-weight: 600;">
+                        Get Expert Electrical Advice at No Cost!
+                    </h4>
+                    <p class="lead mb-4 text-dark" style="font-size: 1.3rem; line-height: 1.8;">
+                        Book your <strong>FREE consultation</strong> today and get professional electrical assessment, 
+                        safety inspection, and personalized recommendations from our certified experts. 
+                        No obligation, no hidden fees - just expert advice to keep your home safe and efficient.
+                    </p>
+                    <div class="consultation-features mb-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="fas fa-check-circle text-dark me-3" style="font-size: 1.5rem;"></i>
+                                    <span class="fw-bold text-dark">Professional Assessment</span>
+                                </div>
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="fas fa-check-circle text-dark me-3" style="font-size: 1.5rem;"></i>
+                                    <span class="fw-bold text-dark">Safety Inspection</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="fas fa-check-circle text-dark me-3" style="font-size: 1.5rem;"></i>
+                                    <span class="fw-bold text-dark">No Obligation</span>
+                                </div>
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="fas fa-check-circle text-dark me-3" style="font-size: 1.5rem;"></i>
+                                    <span class="fw-bold text-dark">Written Quote</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="consultation-cta">
+                        <a href="{% url 'contact_us' %}" class="btn btn-dark btn-lg me-3" style="font-size: 1.2rem; font-weight: 700; padding: 15px 40px;">
+                            <i class="fas fa-calendar-check me-2"></i>Book Free Consultation
+                        </a>
+                        <a href="tel:+15551234567" class="btn btn-outline-dark btn-lg" style="font-size: 1.2rem; font-weight: 700; padding: 15px 40px;">
+                            <i class="fas fa-phone me-2"></i>Call Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4" data-aos="fade-left">
+                <div class="consultation-card text-center">
+                    <div class="card bg-white" style="border-radius: 20px; box-shadow: var(--shadow-lg);">
+                        <div class="card-body p-4">
+                            <div class="consultation-icon mb-3">
+                                <i class="fas fa-clipboard-check text-primary-mistri" style="font-size: 4rem;"></i>
+                            </div>
+                            <h5 class="fw-bold text-dark mb-3">What's Included:</h5>
+                            <ul class="list-unstyled text-start">
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    <span class="text-dark">Electrical Safety Assessment</span>
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    <span class="text-dark">Code Compliance Review</span>
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    <span class="text-dark">Energy Efficiency Tips</span>
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    <span class="text-dark">Detailed Written Report</span>
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    <span class="text-dark">No-Pressure Recommendations</span>
+                                </li>
+                            </ul>
+                            <div class="mt-4">
+                                <p class="text-muted small mb-2">Available 7 Days a Week</p>
+                                <p class="text-primary-mistri fw-bold mb-0">FREE - No Hidden Costs</p>
                             </div>
                         </div>
                     </div>
@@ -45,141 +155,117 @@
             </div>
         </div>
     </div>
-</section>
-
-<!-- Features Section -->
-<section class="section-padding">
-    <div class="container-modern">
-        <div class="text-center mb-5 fade-in">
-            <h2 class="heading-secondary">Why Choose VoltFix?</h2>
-            <p class="text-lead">Professional expertise meets reliable service</p>
+    <!-- Floating Elements for Visual Appeal -->
+    <div class="floating-elements">
+        <div class="floating-icon" style="position: absolute; top: 20%; right: 10%; animation: float 3s ease-in-out infinite;">
+            <i class="fas fa-bolt text-dark" style="font-size: 2rem; opacity: 0.3;"></i>
         </div>
-        
-        <div class="grid-modern">
-            <div class="card-modern text-center" data-delay="0.1s">
-                <div class="bg-primary-light rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
-                    <i class="fas fa-user-tie text-primary" style="font-size: 2rem;"></i>
-                </div>
-                <h4 class="mb-3">Expert Technicians</h4>
-                <p class="text-muted">
-                    Our certified electricians bring years of experience and the latest industry knowledge to every project.
-                </p>
-            </div>
-            
-            <div class="card-modern text-center" data-delay="0.2s">
-                <div class="bg-primary-light rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
-                    <i class="fas fa-clock text-primary" style="font-size: 2rem;"></i>
-                </div>
-                <h4 class="mb-3">24/7 Emergency Service</h4>
-                <p class="text-muted">
-                    Electrical emergencies don't wait. We're available round the clock to handle urgent electrical issues.
-                </p>
-            </div>
-            
-            <div class="card-modern text-center" data-delay="0.3s">
-                <div class="bg-primary-light rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
-                    <i class="fas fa-shield-alt text-primary" style="font-size: 2rem;"></i>
-                </div>
-                <h4 class="mb-3">Safety First</h4>
-                <p class="text-muted">
-                    We prioritize safety in every job, using proper equipment and following strict safety protocols.
-                </p>
-            </div>
-            
-            <div class="card-modern text-center" data-delay="0.4s">
-                <div class="bg-primary-light rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
-                    <i class="fas fa-dollar-sign text-primary" style="font-size: 2rem;"></i>
-                </div>
-                <h4 class="mb-3">Competitive Pricing</h4>
-                <p class="text-muted">
-                    Quality electrical services at fair, transparent prices. No hidden fees or surprises.
-                </p>
-            </div>
-            
-            <div class="card-modern text-center" data-delay="0.5s">
-                <div class="bg-primary-light rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
-                    <i class="fas fa-tools text-primary" style="font-size: 2rem;"></i>
-                </div>
-                <h4 class="mb-3">Quality Products</h4>
-                <p class="text-muted">
-                    We use only premium electrical products and materials from trusted manufacturers.
-                </p>
-            </div>
-            
-            <div class="card-modern text-center" data-delay="0.6s">
-                <div class="bg-primary-light rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
-                    <i class="fas fa-heart text-primary" style="font-size: 2rem;"></i>
-                </div>
-                <h4 class="mb-3">Customer Satisfaction</h4>
-                <p class="text-muted">
-                    Your satisfaction is our priority. We go above and beyond to exceed your expectations.
-                </p>
-            </div>
+        <div class="floating-icon" style="position: absolute; bottom: 20%; left: 5%; animation: float 4s ease-in-out infinite;">
+            <i class="fas fa-tools text-dark" style="font-size: 1.5rem; opacity: 0.3;"></i>
         </div>
     </div>
 </section>
 
-<!-- Services Preview Section -->
+<!-- Trusted By Section -->
 <section class="section-padding bg-light">
-    <div class="container-modern">
-        <div class="row align-items-center">
-            <div class="col-lg-6 slide-in-left" data-delay="0.2s">
-                <h2 class="heading-secondary">Comprehensive Electrical Services</h2>
-                <p class="text-lead">
-                    From routine maintenance to complex installations, we handle all your electrical needs 
-                    with precision and care.
-                </p>
-                <ul class="list-unstyled">
-                    <li class="mb-3 d-flex align-items-center">
-                        <i class="fas fa-check-circle text-success me-3" style="font-size: 1.25rem;"></i>
-                        <span>Electrical Repairs & Troubleshooting</span>
-                    </li>
-                    <li class="mb-3 d-flex align-items-center">
-                        <i class="fas fa-check-circle text-success me-3" style="font-size: 1.25rem;"></i>
-                        <span>New Installation & Upgrades</span>
-                    </li>
-                    <li class="mb-3 d-flex align-items-center">
-                        <i class="fas fa-check-circle text-success me-3" style="font-size: 1.25rem;"></i>
-                        <span>Safety Inspections & Testing</span>
-                    </li>
-                    <li class="mb-3 d-flex align-items-center">
-                        <i class="fas fa-check-circle text-success me-3" style="font-size: 1.25rem;"></i>
-                        <span>Emergency Electrical Services</span>
-                    </li>
-                </ul>
-                <a href="{% url 'services_overview' %}" class="btn btn-primary-modern">
-                    <i class="fas fa-arrow-right me-2"></i>View All Services
-                </a>
+    <div class="container">
+        <div class="text-center mb-5">
+            <h6 class="text-uppercase text-muted fw-bold">Trusted by industry-leading organizations</h6>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-2 col-md-4 col-6 mb-4">
+                <div class="text-center">
+                    <i class="fas fa-industry" style="font-size: 3rem; color: var(--primary-red);"></i>
+                    <p class="mt-2 fw-bold">Industrial Partners</p>
+                </div>
             </div>
-            <div class="col-lg-6 slide-in-right" data-delay="0.4s">
-                <div class="card-modern">
-                    <div class="row g-4">
+            <div class="col-lg-2 col-md-4 col-6 mb-4">
+                <div class="text-center">
+                    <i class="fas fa-building" style="font-size: 3rem; color: var(--primary-red);"></i>
+                    <p class="mt-2 fw-bold">Commercial Clients</p>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-6 mb-4">
+                <div class="text-center">
+                    <i class="fas fa-home" style="font-size: 3rem; color: var(--primary-red);"></i>
+                    <p class="mt-2 fw-bold">Residential Trust</p>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-6 mb-4">
+                <div class="text-center">
+                    <i class="fas fa-certificate" style="font-size: 3rem; color: var(--primary-red);"></i>
+                    <p class="mt-2 fw-bold">Certified Quality</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section class="section-padding">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6" data-aos="fade-right">
+                <div class="about-content">
+                    <h6 class="section-subtitle">Since 2008</h6>
+                    <h2 class="section-title text-start">ABOUT VOLTFIX</h2>
+                    <h4 class="mb-4" style="color: var(--primary-red); font-weight: 700;">We take you to the next level industry solutions</h4>
+                    <p class="lead mb-4">
+                        We have facility to produce advance work various industrial applications based on specially developed technology. 
+                        We are also ready to development by according to users changing needs.
+                    </p>
+                    <div class="row mb-4">
                         <div class="col-6">
-                            <div class="text-center p-3">
-                                <i class="fas fa-home text-primary mb-3" style="font-size: 2.5rem;"></i>
-                                <h5>Residential</h5>
-                                <p class="text-muted small">Home electrical services</p>
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-check-circle text-primary-mistri me-3" style="font-size: 1.5rem;"></i>
+                                <span class="fw-bold">Certified Technicians</span>
+                            </div>
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-check-circle text-primary-mistri me-3" style="font-size: 1.5rem;"></i>
+                                <span class="fw-bold">24/7 Emergency Service</span>
                             </div>
                         </div>
                         <div class="col-6">
-                            <div class="text-center p-3">
-                                <i class="fas fa-building text-primary mb-3" style="font-size: 2.5rem;"></i>
-                                <h5>Commercial</h5>
-                                <p class="text-muted small">Business electrical solutions</p>
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-check-circle text-primary-mistri me-3" style="font-size: 1.5rem;"></i>
+                                <span class="fw-bold">Quality Guarantee</span>
+                            </div>
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-check-circle text-primary-mistri me-3" style="font-size: 1.5rem;"></i>
+                                <span class="fw-bold">Competitive Pricing</span>
                             </div>
                         </div>
-                        <div class="col-6">
-                            <div class="text-center p-3">
-                                <i class="fas fa-industry text-primary mb-3" style="font-size: 2.5rem;"></i>
-                                <h5>Industrial</h5>
-                                <p class="text-muted small">Industrial electrical systems</p>
+                    </div>
+                    <a href="{% url 'about_us' %}" class="btn btn-primary-mistri">
+                        <i class="fas fa-arrow-right me-2"></i>Learn More
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6" data-aos="fade-left">
+                <div class="about-stats">
+                    <div class="row">
+                        <div class="col-6 mb-4">
+                            <div class="stat-card">
+                                <h3 class="stat-number" data-target="22.8">0</h3>
+                                <p class="stat-label">M+ Projects</p>
                             </div>
                         </div>
-                        <div class="col-6">
-                            <div class="text-center p-3">
-                                <i class="fas fa-solar-panel text-primary mb-3" style="font-size: 2.5rem;"></i>
-                                <h5>Renewable</h5>
-                                <p class="text-muted small">Solar & green energy</p>
+                        <div class="col-6 mb-4">
+                            <div class="stat-card">
+                                <h3 class="stat-number" data-target="1379">0</h3>
+                                <p class="stat-label">Services Completed</p>
+                            </div>
+                        </div>
+                        <div class="col-6 mb-4">
+                            <div class="stat-card">
+                                <h3 class="stat-number" data-target="1105">0</h3>
+                                <p class="stat-label">Accredited Partners</p>
+                            </div>
+                        </div>
+                        <div class="col-6 mb-4">
+                            <div class="stat-card">
+                                <h3 class="stat-number" data-target="6986">0</h3>
+                                <p class="stat-label">Service Locations</p>
                             </div>
                         </div>
                     </div>
@@ -189,225 +275,257 @@
     </div>
 </section>
 
-<!-- Products Preview Section -->
-<section class="section-padding">
-    <div class="container-modern">
-        <div class="text-center mb-5 fade-in">
-            <h2 class="heading-secondary">Premium Electrical Products</h2>
-            <p class="text-lead">Quality products for every electrical need</p>
+<!-- Services Section -->
+<section class="section-padding bg-light">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h6 class="section-subtitle">OUR AWESOME SERVICES</h6>
+            <h2 class="section-title">provides the best service for sustainable progress</h2>
         </div>
-        
-        <div class="row g-4">
-            <div class="col-md-3 col-sm-6">
-                <div class="card-modern text-center h-100" data-delay="0.1s">
-                    <i class="fas fa-lightbulb text-primary mb-3" style="font-size: 3rem;"></i>
-                    <h5>Lighting Solutions</h5>
-                    <p class="text-muted">LED, smart lighting, and traditional options</p>
+        <div class="row">
+            <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="card card-mistri h-100">
+                    <div class="card-body text-center">
+                        <div class="service-icon mb-4">
+                            <i class="fas fa-bolt" style="font-size: 3rem; color: var(--primary-red);"></i>
+                        </div>
+                        <h5 class="card-title">Electrical Installation</h5>
+                        <p class="card-text">Professional electrical installation services for residential and commercial properties with certified technicians.</p>
+                        <a href="{% url 'services_overview' %}" class="btn btn-secondary-mistri">Learn More</a>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-3 col-sm-6">
-                <div class="card-modern text-center h-100" data-delay="0.2s">
-                    <i class="fas fa-plug text-primary mb-3" style="font-size: 3rem;"></i>
-                    <h5>Switches & Outlets</h5>
-                    <p class="text-muted">Modern switches and electrical outlets</p>
+            <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="card card-mistri h-100">
+                    <div class="card-body text-center">
+                        <div class="service-icon mb-4">
+                            <i class="fas fa-tools" style="font-size: 3rem; color: var(--primary-red);"></i>
+                        </div>
+                        <h5 class="card-title">Maintenance & Repair</h5>
+                        <p class="card-text">Comprehensive maintenance and repair services to keep your electrical systems running efficiently.</p>
+                        <a href="{% url 'services_overview' %}" class="btn btn-secondary-mistri">Learn More</a>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-3 col-sm-6">
-                <div class="card-modern text-center h-100" data-delay="0.3s">
-                    <i class="fas fa-network-wired text-primary mb-3" style="font-size: 3rem;"></i>
-                    <h5>Cables & Wiring</h5>
-                    <p class="text-muted">High-quality cables and wiring solutions</p>
+            <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="card card-mistri h-100">
+                    <div class="card-body text-center">
+                        <div class="service-icon mb-4">
+                            <i class="fas fa-lightbulb" style="font-size: 3rem; color: var(--primary-red);"></i>
+                        </div>
+                        <h5 class="card-title">Lighting Solutions</h5>
+                        <p class="card-text">Modern lighting solutions including LED installation, smart lighting, and energy-efficient options.</p>
+                        <a href="{% url 'services_overview' %}" class="btn btn-secondary-mistri">Learn More</a>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-3 col-sm-6">
-                <div class="card-modern text-center h-100" data-delay="0.4s">
-                    <i class="fas fa-tools text-primary mb-3" style="font-size: 3rem;"></i>
-                    <h5>Tools & Equipment</h5>
-                    <p class="text-muted">Professional electrical tools and equipment</p>
+            <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="400">
+                <div class="card card-mistri h-100">
+                    <div class="card-body text-center">
+                        <div class="service-icon mb-4">
+                            <i class="fas fa-snowflake" style="font-size: 3rem; color: var(--primary-red);"></i>
+                        </div>
+                        <h5 class="card-title">HVAC Services</h5>
+                        <p class="card-text">Complete HVAC installation, maintenance, and repair services for optimal comfort and efficiency.</p>
+                        <a href="{% url 'services_overview' %}" class="btn btn-secondary-mistri">Learn More</a>
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="text-center mt-5">
-            <a href="{% url 'products' %}" class="btn btn-primary-modern">
-                <i class="fas fa-shopping-cart me-2"></i>Browse All Products
-            </a>
+            <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="500">
+                <div class="card card-mistri h-100">
+                    <div class="card-body text-center">
+                        <div class="service-icon mb-4">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: var(--primary-red);"></i>
+                        </div>
+                        <h5 class="card-title">Emergency Services</h5>
+                        <p class="card-text">24/7 emergency electrical services for urgent repairs and safety-critical situations.</p>
+                        <a href="{% url 'services_overview' %}" class="btn btn-secondary-mistri">Learn More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="600">
+                <div class="card card-mistri h-100">
+                    <div class="card-body text-center">
+                        <div class="service-icon mb-4">
+                            <i class="fas fa-shield-alt" style="font-size: 3rem; color: var(--primary-red);"></i>
+                        </div>
+                        <h5 class="card-title">Safety Inspections</h5>
+                        <p class="card-text">Comprehensive electrical safety inspections to ensure your property meets all safety standards.</p>
+                        <a href="{% url 'services_overview' %}" class="btn btn-secondary-mistri">Learn More</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
-<!-- CTA Section -->
-<section class="section-padding bg-primary text-white">
-    <div class="container-modern text-center">
-        <h2 class="heading-secondary text-white mb-4">Ready to Get Started?</h2>
-        <p class="text-lead text-white-50 mb-5">
-            Contact us today for a free consultation and quote. Let's power your future together.
-        </p>
-        <div class="d-flex gap-3 justify-content-center flex-wrap">
-            <a href="tel:+15551234567" class="btn btn-light btn-lg">
-                <i class="fas fa-phone me-2"></i>Call Now
-            </a>
-            <a href="mailto:info@voltfix.com" class="btn btn-outline-light btn-lg">
-                <i class="fas fa-envelope me-2"></i>Email Us
-            </a>
+<!-- Products Section -->
+<section class="section-padding">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h6 class="section-subtitle">Popular products</h6>
+            <h2 class="section-title">industrial products</h2>
+        </div>
+        <div class="row">
+            <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="card card-mistri h-100">
+                    <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="Product" style="height: 200px; object-fit: cover;">
+                    <div class="card-body text-center">
+                        <h6 class="card-title">Inverter Power Generator</h6>
+                        <div class="price mb-3">
+                            <span class="text-decoration-line-through text-muted me-2">$1099</span>
+                            <span class="fw-bold text-primary-mistri">$999</span>
+                        </div>
+                        <a href="{% url 'products' %}" class="btn btn-primary-mistri">View Details</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="card card-mistri h-100">
+                    <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="Product" style="height: 200px; object-fit: cover;">
+                    <div class="card-body text-center">
+                        <h6 class="card-title">Compact Drill Cordless</h6>
+                        <div class="price mb-3">
+                            <span class="text-decoration-line-through text-muted me-2">$259</span>
+                            <span class="fw-bold text-primary-mistri">$199</span>
+                        </div>
+                        <a href="{% url 'products' %}" class="btn btn-primary-mistri">View Details</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="card card-mistri h-100">
+                    <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="Product" style="height: 200px; object-fit: cover;">
+                    <div class="card-body text-center">
+                        <h6 class="card-title">LiIon Compact Drill Driver</h6>
+                        <div class="price mb-3">
+                            <span class="text-decoration-line-through text-muted me-2">$299</span>
+                            <span class="fw-bold text-primary-mistri">$258</span>
+                        </div>
+                        <a href="{% url 'products' %}" class="btn btn-primary-mistri">View Details</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="400">
+                <div class="card card-mistri h-100">
+                    <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="Product" style="height: 200px; object-fit: cover;">
+                    <div class="card-body text-center">
+                        <h6 class="card-title">Compound Saw Makita</h6>
+                        <div class="price mb-3">
+                            <span class="text-decoration-line-through text-muted me-2">$459</span>
+                            <span class="fw-bold text-primary-mistri">$358</span>
+                        </div>
+                        <a href="{% url 'products' %}" class="btn btn-primary-mistri">View Details</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
 <!-- Testimonials Section -->
-<section class="section-padding">
-    <div class="container-modern">
-        <div class="text-center mb-5 fade-in">
-            <h2 class="heading-secondary">What Our Customers Say</h2>
-            <p class="text-lead">Trusted by thousands of satisfied customers</p>
+<section class="section-padding bg-light">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h6 class="section-subtitle">PUBLIC TESTIMONIAL</h6>
+            <h2 class="section-title">public feedback about voltfix</h2>
         </div>
-        
-        <div class="row g-4">
-            <div class="col-lg-4">
-                <div class="card-modern h-100" data-delay="0.1s">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="bg-primary-light rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
-                            <i class="fas fa-user text-primary"></i>
+        <div class="row">
+            <div class="col-lg-6 mb-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="card card-mistri h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="testimonial-avatar me-3">
+                                <i class="fas fa-user" style="font-size: 2rem; color: var(--primary-red);"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0 fw-bold">Daniel Smith</h6>
+                                <small class="text-muted">Senior Engineer</small>
+                            </div>
                         </div>
-                        <div>
-                            <h6 class="mb-0">Sarah Johnson</h6>
-                            <small class="text-muted">Homeowner</small>
+                        <p class="card-text">
+                            "VoltFix provided exceptional electrical services for our industrial facility. 
+                            Their team was professional, efficient, and delivered quality work on time. 
+                            Highly recommended for any electrical project."
+                        </p>
+                        <div class="text-primary-mistri">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
                         </div>
-                    </div>
-                    <p class="text-muted">
-                        "VoltFix did an amazing job upgrading our electrical panel. Professional, 
-                        clean, and completed the work on time. Highly recommended!"
-                    </p>
-                    <div class="text-warning">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
                     </div>
                 </div>
             </div>
-            
-            <div class="col-lg-4">
-                <div class="card-modern h-100" data-delay="0.2s">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="bg-primary-light rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
-                            <i class="fas fa-user text-primary"></i>
+            <div class="col-lg-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="card card-mistri h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="testimonial-avatar me-3">
+                                <i class="fas fa-user" style="font-size: 2rem; color: var(--primary-red);"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0 fw-bold">Luke Ross</h6>
+                                <small class="text-muted">Project Manager</small>
+                            </div>
                         </div>
-                        <div>
-                            <h6 class="mb-0">Mike Chen</h6>
-                            <small class="text-muted">Business Owner</small>
+                        <p class="card-text">
+                            "The emergency service from VoltFix was outstanding. They responded quickly 
+                            and resolved our electrical issue efficiently. Their expertise and reliability 
+                            make them our go-to electrical service provider."
+                        </p>
+                        <div class="text-primary-mistri">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
                         </div>
-                    </div>
-                    <p class="text-muted">
-                        "The team at VoltFix is exceptional. They handled our commercial electrical 
-                        needs with expertise and professionalism. Great service!"
-                    </p>
-                    <div class="text-warning">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-4">
-                <div class="card-modern h-100" data-delay="0.3s">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="bg-primary-light rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
-                            <i class="fas fa-user text-primary"></i>
-                        </div>
-                        <div>
-                            <h6 class="mb-0">Emily Rodriguez</h6>
-                            <small class="text-muted">Property Manager</small>
-                        </div>
-                    </div>
-                    <p class="text-muted">
-                        "Reliable, professional, and affordable. VoltFix has been our go-to 
-                        electrical service provider for years. Outstanding work!"
-                    </p>
-                    <div class="text-warning">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-{% endblock %}
 
-{% block extra_css %}
+<!-- CTA Section -->
+<section class="section-padding" style="background: var(--gradient-red);">
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8" data-aos="fade-up">
+                <h2 class="text-white mb-4">Ready to Get Started?</h2>
+                <p class="text-white mb-4" style="font-size: 1.2rem;">
+                    Contact us today for professional electrical services and premium products. 
+                    Let VoltFix power your success!
+                </p>
+                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                    <a href="{% url 'contact_us' %}" class="btn btn-secondary-mistri">
+                        <i class="fas fa-phone me-2"></i>Get Consultation
+                    </a>
+                    <a href="{% url 'services_overview' %}" class="btn btn-secondary-mistri">
+                        <i class="fas fa-tools me-2"></i>Our Services
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <style>
-    .hero-section {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        position: relative;
-        overflow: hidden;
-    }
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+}
 
-    .hero-section::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-        opacity: 0.3;
-    }
+.consultation-badge .badge {
+    animation: pulse 2s infinite;
+}
 
-    .hero-content {
-        position: relative;
-        z-index: 2;
-    }
-
-    .electric-sphere {
-        position: relative;
-        z-index: 2;
-    }
-
-    .electric-sphere::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 300px;
-        height: 300px;
-        background: radial-gradient(circle, rgba(0, 212, 255, 0.2) 0%, transparent 70%);
-        border-radius: 50%;
-        animation: pulse 3s infinite;
-    }
-
-    .product-card {
-        transition: all 0.3s ease;
-    }
-
-    .product-card:hover {
-        transform: translateY(-10px);
-    }
-
-    .service-card {
-        transition: all 0.3s ease;
-        cursor: pointer;
-    }
-
-    .service-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-    }
-
-    .service-icon {
-        transition: all 0.3s ease;
-    }
-
-    .service-card:hover .service-icon {
-        transform: scale(1.1);
-    }
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
 </style>
 {% endblock %} 

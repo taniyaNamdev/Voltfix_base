@@ -1,0 +1,187 @@
+{% extends 'electric_services/base.html' %}
+{% load static %}
+
+{% block title %}My Bookings - VoltFix{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="text-danger mb-4">
+                <i class="fas fa-calendar-check me-2"></i>My Service Bookings
+            </h2>
+            
+            <!-- Booking Statistics -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card bg-primary text-white">
+                        <div class="card-body text-center">
+                            <h4>{{ total_bookings }}</h4>
+                            <p class="mb-0">Total Bookings</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-warning text-white">
+                        <div class="card-body text-center">
+                            <h4>{{ pending_bookings }}</h4>
+                            <p class="mb-0">Pending</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-info text-white">
+                        <div class="card-body text-center">
+                            <h4>{{ confirmed_bookings }}</h4>
+                            <p class="mb-0">Confirmed</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-success text-white">
+                        <div class="card-body text-center">
+                            <h4>{{ completed_bookings }}</h4>
+                            <p class="mb-0">Completed</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter Options -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Filter Bookings</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <form method="get" class="d-flex">
+                                <select name="status" class="form-select me-2">
+                                    <option value="">All Statuses</option>
+                                    <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
+                                    <option value="confirmed" {% if status_filter == 'confirmed' %}selected{% endif %}>Confirmed</option>
+                                    <option value="in_progress" {% if status_filter == 'in_progress' %}selected{% endif %}>In Progress</option>
+                                    <option value="completed" {% if status_filter == 'completed' %}selected{% endif %}>Completed</option>
+                                    <option value="cancelled" {% if status_filter == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                                </select>
+                                <button type="submit" class="btn btn-danger">Filter</button>
+                                {% if status_filter %}
+                                    <a href="{% url 'booking_history' %}" class="btn btn-outline-secondary ms-2">Clear</a>
+                                {% endif %}
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bookings List -->
+            {% if bookings %}
+                <div class="row">
+                    {% for booking in bookings %}
+                        <div class="col-12 mb-4">
+                            <div class="card {% if booking.is_emergency %}border-danger{% endif %}">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">
+                                        <i class="fas fa-tools me-2"></i>{{ booking.service.name }}
+                                        {% if booking.is_emergency %}
+                                            <span class="badge bg-danger ms-2">Emergency</span>
+                                        {% endif %}
+                                    </h5>
+                                    <div>
+                                        <span class="badge bg-{{ booking.get_status_color }}">{{ booking.get_status_display }}</span>
+                                        {% if booking.priority == 'high' %}
+                                            <span class="badge bg-warning ms-1">High Priority</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <h6><i class="fas fa-map-marker-alt text-danger me-2"></i>Location</h6>
+                                            <p class="mb-2">{{ booking.full_address }}</p>
+                                            
+                                            <h6><i class="fas fa-phone text-danger me-2"></i>Contact</h6>
+                                            <p class="mb-2">{{ booking.contact_phone }}<br>{{ booking.contact_email }}</p>
+                                            
+                                            <h6><i class="fas fa-calendar text-danger me-2"></i>Scheduling</h6>
+                                            <p class="mb-2">
+                                                Preferred: {{ booking.preferred_date|date:"M d, Y" }} ({{ booking.get_preferred_time_slot_display }})<br>
+                                                {% if booking.scheduled_date %}
+                                                    Scheduled: {{ booking.scheduled_date|date:"M d, Y" }}
+                                                {% endif %}
+                                            </p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h6><i class="fas fa-info-circle text-danger me-2"></i>Service Details</h6>
+                                            <p class="mb-2">{{ booking.service_description }}</p>
+                                            {% if booking.special_requirements %}
+                                                <p class="mb-2"><strong>Special Requirements:</strong> {{ booking.special_requirements }}</p>
+                                            {% endif %}
+                                            
+                                            <h6><i class="fas fa-rupee-sign text-danger me-2"></i>Pricing (GST Inclusive)</h6>
+                                            <p class="mb-2">
+                                                {% if booking.estimated_cost %}
+                                                    Estimated: ₹{{ booking.estimated_cost|floatformat:2 }} (includes 18% GST)<br>
+                                                {% endif %}
+                                                {% if booking.final_cost %}
+                                                    Final: ₹{{ booking.final_cost|floatformat:2 }} (includes 18% GST)<br>
+                                                {% endif %}
+                                                Payment: {{ booking.get_payment_status_display }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row mt-3">
+                                        <div class="col-12">
+                                            <small class="text-muted">
+                                                <i class="fas fa-clock me-1"></i>Booked on {{ booking.booked_at|date:"M d, Y at g:i A" }}
+                                                {% if booking.updated_at != booking.booked_at %}
+                                                    | Updated on {{ booking.updated_at|date:"M d, Y at g:i A" }}
+                                                {% endif %}
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                    <h4 class="text-muted">No bookings found</h4>
+                    <p class="text-muted">
+                        {% if status_filter %}
+                            No bookings match your current filter.
+                        {% else %}
+                            You haven't made any service bookings yet.
+                        {% endif %}
+                    </p>
+                    <a href="{% url 'services_overview' %}" class="btn btn-danger">
+                        <i class="fas fa-plus me-2"></i>Book a Service
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+.card {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.badge {
+    font-size: 0.8em;
+}
+
+.bg-pending { background-color: #ffc107 !important; }
+.bg-confirmed { background-color: #17a2b8 !important; }
+.bg-in_progress { background-color: #007bff !important; }
+.bg-completed { background-color: #28a745 !important; }
+.bg-cancelled { background-color: #dc3545 !important; }
+</style>
+{% endblock %} 

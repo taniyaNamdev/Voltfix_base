@@ -1,86 +1,449 @@
-/* VoltFix Custom Dark Red & White Theme */
-body {
-    background-color: #fff;
-    color: #1f2937;
+/* VoltFix - Mistri-inspired Theme */
+:root {
+    --primary-red: #8B0000;
+    --primary-dark: #660000;
+    --primary-light: #DC143C;
+    --secondary-white: #ffffff;
+    --accent-black: #000000;
+    --text-dark: #1a1a1a;
+    --text-gray: #666666;
+    --text-light: #999999;
+    --bg-light: #f8f9fa;
+    --bg-dark: #1a1a1a;
+    --border-light: #e0e0e0;
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.1);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.15);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.2);
+    --gradient-red: linear-gradient(135deg, var(--primary-red), var(--primary-dark));
+    --gradient-white: linear-gradient(135deg, var(--secondary-white), #f8f9fa);
 }
 
-/* Navbar Styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    color: var(--text-dark);
+    background-color: var(--secondary-white);
+    overflow-x: hidden;
+}
+
+/* Header & Navigation - Mistri Style */
+.header-top {
+    background: linear-gradient(135deg, #dc2626 0%, #8B0000 100%) !important;
+    color: white;
+    padding: 8px 0;
+    font-size: 14px;
+}
+
+.header-top .contact-info {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.header-top .contact-info i {
+    color: var(--primary-light);
+    margin-right: 5px;
+}
+
+.header-top .social-links {
+    display: flex;
+    gap: 15px;
+}
+
+.header-top .social-links a {
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.header-top .social-links a:hover {
+    color: var(--primary-light);
+    transform: translateY(-2px);
+}
+
+/* Main Navigation */
 .navbar {
-    background-color: #7f1d1d !important;
-    color: white !important;
+    background: var(--secondary-white) !important;
+    box-shadow: var(--shadow-md);
+    padding: 15px 0;
+    transition: all 0.3s ease;
 }
 
 .navbar-brand {
-    color: white !important;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 900;
+    font-size: 2rem;
+    color: var(--primary-red) !important;
+    text-transform: uppercase;
+    letter-spacing: 2px;
 }
 
-.navbar-brand:hover {
-    color: #fef2f2 !important;
+.navbar-brand span {
+    color: var(--accent-black);
 }
 
 .nav-link {
-    color: white !important;
+    font-weight: 600;
+    color: var(--text-dark) !important;
+    margin: 0 5px;
+    padding: 10px 20px !important;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 14px;
 }
 
 .nav-link:hover {
-    color: white !important;
-    background-color: rgba(255, 255, 255, 0.1) !important;
-}
-
-.navbar-toggler {
-    border-color: rgba(255, 255, 255, 0.5) !important;
-}
-
-.navbar-toggler:focus {
-    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25) !important;
-}
-
-/* Dropdown styling */
-.dropdown-menu {
-    background: white !important;
-    border: 1px solid #e5e7eb !important;
-}
-
-.dropdown-item {
-    color: #1f2937 !important;
-}
-
-.dropdown-item:hover {
-    background-color: #fef2f2 !important;
-    color: #7f1d1d !important;
-}
-
-/* General styling */
-.navbar, .footer, .bg-primary, .btn-primary, .btn-danger {
-    background-color: #7f1d1d !important;
-    color: #fff !important;
-}
-
-a, .text-primary, .text-danger {
-    color: #7f1d1d !important;
-}
-
-a:hover, .btn-primary:hover, .btn-danger:hover {
-    background-color: #5f1a1a !important;
-    color: #fff !important;
-}
-
-.card, .modal-content {
-    border-color: #7f1d1d;
-}
-
-.btn-light, .bg-white {
-    background-color: #fff !important;
-    color: #7f1d1d !important;
-}
-
-/* Ensure text visibility */
-.text-white {
+    color: var(--primary-red) !important;
+    background: var(--primary-red);
     color: white !important;
 }
 
-.text-dark {
-    color: #1f2937 !important;
+.nav-link.active {
+    background: var(--primary-red);
+    color: white !important;
 }
 
-/* Add more customizations as needed for your UI */ 
+/* Buttons - Mistri Style */
+.btn-mistri {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    padding: 15px 35px;
+    border-radius: 50px;
+    border: none;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 14px;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-mistri::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn-mistri:hover::before {
+    left: 100%;
+}
+
+.btn-primary-mistri {
+    background: var(--gradient-red);
+    color: white;
+    box-shadow: var(--shadow-md);
+}
+
+.btn-primary-mistri:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+    color: white;
+}
+
+.btn-secondary-mistri {
+    background: transparent;
+    color: var(--primary-red);
+    border: 2px solid var(--primary-red);
+}
+
+.btn-secondary-mistri:hover {
+    background: var(--primary-red);
+    color: white;
+    transform: translateY(-3px);
+}
+
+/* Sections */
+.section-padding {
+    padding: 100px 0;
+}
+
+.section-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 3rem;
+    color: var(--text-dark);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.section-subtitle {
+    font-size: 1.2rem;
+    color: var(--primary-red);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.section-description {
+    font-size: 1.1rem;
+    color: var(--text-gray);
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 50px;
+}
+
+/* Cards */
+.card-mistri {
+    background: white;
+    border-radius: 20px;
+    border: none;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.card-mistri:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-lg);
+}
+
+.card-mistri .card-body {
+    padding: 30px;
+}
+
+.card-mistri .card-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 15px;
+}
+
+/* Stats */
+.stat-card {
+    text-align: center;
+    padding: 40px 20px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+}
+
+.stat-number {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 900;
+    font-size: 3rem;
+    color: var(--primary-red);
+    margin-bottom: 10px;
+}
+
+.stat-label {
+    font-weight: 600;
+    color: var(--text-gray);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1621905251189-08b45d6a269e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80') center/cover;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.hero-content {
+    color: white;
+}
+
+.hero-content h1 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 900;
+    line-height: 1.2;
+}
+
+.hero-content .lead {
+    font-size: 1.2rem;
+    line-height: 1.8;
+}
+
+/* Service Icons */
+.service-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--gradient-red);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    color: white;
+    font-size: 2rem;
+    transition: all 0.3s ease;
+}
+
+.service-icon:hover {
+    transform: scale(1.1);
+}
+
+/* Testimonial Cards */
+.testimonial-avatar {
+    width: 60px;
+    height: 60px;
+    background: var(--gradient-red);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+}
+
+/* Footer */
+.footer {
+    background: var(--bg-dark);
+    color: white;
+    padding: 60px 0 20px;
+}
+
+.footer h5 {
+    color: var(--primary-red);
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.footer a {
+    color: #ccc;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer a:hover {
+    color: var(--primary-red);
+}
+
+.footer-bottom {
+    background: var(--primary-red);
+    padding: 20px 0;
+    margin-top: 40px;
+}
+
+/* Animations */
+.fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s ease;
+}
+
+.fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.slide-in-left {
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: all 0.6s ease;
+}
+
+.slide-in-left.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.slide-in-right {
+    opacity: 0;
+    transform: translateX(50px);
+    transition: all 0.6s ease;
+}
+
+.slide-in-right.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .section-title {
+        font-size: 2rem;
+    }
+    
+    .navbar-brand {
+        font-size: 1.5rem;
+    }
+    
+    .btn-mistri {
+        padding: 12px 25px;
+        font-size: 12px;
+    }
+    
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+    
+    .section-title {
+        font-size: 1.8rem;
+    }
+    
+    .header-top .contact-info {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+/* Utility Classes */
+.text-primary-mistri {
+    color: var(--primary-red) !important;
+}
+
+.bg-primary-mistri {
+    background: var(--primary-red) !important;
+}
+
+.border-primary-mistri {
+    border-color: var(--primary-red) !important;
+}
+
+/* Counter Animation */
+.counter-animation {
+    transition: all 0.3s ease;
+}
+
+/* Loading States */
+.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+/* Success/Error States */
+.success {
+    color: #28a745;
+}
+
+.error {
+    color: #dc3545;
+} 

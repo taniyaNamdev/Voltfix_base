@@ -4,124 +4,389 @@
 {% block title %}User Profile - VoltFix{% endblock %}
 
 {% block content %}
-<!-- Page Header -->
-<section class="page-header-section bg-gradient">
-    <div class="container-modern">
-        <div class="text-center fade-in">
-            <h1 class="heading-primary text-gradient">User Profile</h1>
-            <p class="text-lead" style="color: var(--text-secondary);">
-                Manage your profile, orders, and settings.
-            </p>
-        </div>
-    </div>
-</section>
-
-<!-- Profile Section -->
-<section class="section-padding">
-    <div class="container-modern">
-        <div class="row g-5">
-            <!-- Profile Sidebar -->
+<section class="profile-main-section py-5">
+    <div class="container">
+        <div class="row g-4 align-items-start">
+            <!-- Left: Profile Picture & Details -->
             <div class="col-lg-4">
-                <div class="card-modern p-4 text-center">
-                    {% if user.profile.image %}
-                        <img src="{{ user.profile.image.url }}" class="rounded-circle mx-auto mb-3" style="width: 120px; height: 120px; object-fit: cover;">
-                    {% else %}
-                        <div class="bg-primary-light rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 120px; height: 120px;">
-                            <i class="fas fa-user text-primary" style="font-size: 3rem;"></i>
+                <div class="profile-side-card text-center p-4">
+                    <div class="profile-avatar mb-3 mx-auto">
+                        {% if user_profile.profile_picture %}
+                            <img src="{{ user_profile.profile_picture.url }}" class="profile-image" alt="Profile Picture">
+                        {% else %}
+                            <div class="profile-image-placeholder">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        {% endif %}
+                        <div class="profile-status">
+                            <span class="status-dot online"></span>
+                        </div>
+                    </div>
+                    <h2 class="profile-name mb-1">{{ user.get_full_name|default:user.username }}</h2>
+                    <div class="profile-email mb-1">
+                        <i class="fas fa-envelope me-2"></i>{{ user.email }}
+                    </div>
+                    {% if user_profile.phone_number %}
+                        <div class="profile-phone mb-2">
+                            <i class="fas fa-phone me-2"></i>{{ user_profile.phone_number }}
                         </div>
                     {% endif %}
-                    <h4 class="mb-1">{{ user.get_full_name|default:user.username }}</h4>
-                    <p class="text-secondary">{{ user.email }}</p>
+                    <div class="profile-side-stats d-flex justify-content-center gap-3 mt-3">
+                        <div class="stat-item text-center">
+                            <span class="stat-number">{{ total_bookings|default:0 }}</span>
+                            <span class="stat-label">Total</span>
+                        </div>
+                        <div class="stat-item text-center">
+                            <span class="stat-number">{{ completed_bookings|default:0 }}</span>
+                            <span class="stat-label">Completed</span>
+                        </div>
+                        <div class="stat-item text-center">
+                            <span class="stat-number">{{ pending_bookings|default:0 }}</span>
+                            <span class="stat-label">Pending</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <!-- Profile Content -->
+            <!-- Right: Profile Tabs -->
             <div class="col-lg-8">
-                <div class="card-modern p-4">
-                    <form method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        
-                        <h4 class="mb-4">Personal Information</h4>
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label for="{{ user_form.first_name.id_for_label }}" class="form-label">First Name</label>
-                                {{ user_form.first_name }}
-                            </div>
-                            <div class="col-md-6">
-                                <label for="{{ user_form.last_name.id_for_label }}" class="form-label">Last Name</label>
-                                {{ user_form.last_name }}
-                            </div>
-                            <div class="col-md-6">
-                                <label for="{{ user_form.email.id_for_label }}" class="form-label">Email</label>
-                                {{ user_form.email }}
-                            </div>
-                            <div class="col-md-6">
-                                <label for="{{ profile_form.phone_number.id_for_label }}" class="form-label">Phone Number</label>
-                                {{ profile_form.phone_number }}
-                            </div>
-                            <div class="col-12">
-                                <label for="{{ profile_form.profile_picture.id_for_label }}" class="form-label">Profile Picture</label>
-                                {{ profile_form.profile_picture }}
+                <div class="profile-right-card p-4">
+                    <div class="row">
+                        <!-- Profile Navigation -->
+                        <div class="col-md-4 mb-4">
+                            <div class="profile-nav themed-nav">
+                                <div class="nav-item active" data-tab="personal">
+                                    <i class="fas fa-user me-2"></i>Personal Info
+                                </div>
+                                <div class="nav-item" data-tab="address">
+                                    <i class="fas fa-map-marker-alt me-2"></i>Address
+                                </div>
+                                <div class="nav-item" data-tab="security">
+                                    <i class="fas fa-shield-alt me-2"></i>Security
+                                </div>
                             </div>
                         </div>
-
-                        <hr class="my-4">
-
-                        <h4 class="mb-4">Shipping Address</h4>
-                        <div class="row g-3">
-                            <div class="col-12">
-                                <label for="{{ profile_form.address_line_1.id_for_label }}" class="form-label">Address Line 1</label>
-                                {{ profile_form.address_line_1 }}
+                        <!-- Profile Content Area -->
+                        <div class="col-md-8">
+                            <!-- Personal Information Tab -->
+                            <div class="profile-tab active" id="personal">
+                                <div class="card profile-card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">
+                                            <i class="fas fa-user text-primary me-2"></i>Personal Information
+                                        </h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <form method="post" enctype="multipart/form-data">
+                                            {% csrf_token %}
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">First Name</label>
+                                                    {{ user_form.first_name }}
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Last Name</label>
+                                                    {{ user_form.last_name }}
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Email Address</label>
+                                                    {{ user_form.email }}
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Phone Number</label>
+                                                    {{ profile_form.phone_number }}
+                                                </div>
+                                                <div class="col-12 mb-3">
+                                                    <label class="form-label">Profile Picture</label>
+                                                    <div class="profile-picture-upload">
+                                                        {{ profile_form.profile_picture }}
+                                                        <small class="text-muted">Upload a clear photo of yourself (JPG, PNG, max 5MB)</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="text-end">
+                                                <button type="submit" class="btn btn-primary">
+                                                    <i class="fas fa-save me-2"></i>Save Changes
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-12">
-                                <label for="{{ profile_form.address_line_2.id_for_label }}" class="form-label">Address Line 2</label>
-                                {{ profile_form.address_line_2 }}
+                            <!-- Address Tab -->
+                            <div class="profile-tab" id="address">
+                                <div class="card profile-card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">
+                                            <i class="fas fa-map-marker-alt text-primary me-2"></i>Address Information
+                                        </h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <form method="post" enctype="multipart/form-data">
+                                            {% csrf_token %}
+                                            <div class="row">
+                                                <div class="col-12 mb-3">
+                                                    <label class="form-label">Address Line 1</label>
+                                                    {{ profile_form.address_line_1 }}
+                                                </div>
+                                                <div class="col-12 mb-3">
+                                                    <label class="form-label">Address Line 2</label>
+                                                    {{ profile_form.address_line_2 }}
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">City</label>
+                                                    {{ profile_form.city }}
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">State/Province</label>
+                                                    {{ profile_form.state_province_region }}
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Postal Code</label>
+                                                    {{ profile_form.postal_code }}
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label">Country</label>
+                                                    {{ profile_form.country }}
+                                                </div>
+                                            </div>
+                                            <div class="text-end">
+                                                <button type="submit" class="btn btn-primary">
+                                                    <i class="fas fa-save me-2"></i>Save Address
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-md-6">
-                                <label for="{{ profile_form.city.id_for_label }}" class="form-label">City</label>
-                                {{ profile_form.city }}
-                            </div>
-                            <div class="col-md-6">
-                                <label for="{{ profile_form.state_province_region.id_for_label }}" class="form-label">State/Province</label>
-                                {{ profile_form.state_province_region }}
-                            </div>
-                            <div class="col-md-6">
-                                <label for="{{ profile_form.postal_code.id_for_label }}" class="form-label">Postal Code</label>
-                                {{ profile_form.postal_code }}
-                            </div>
-                            <div class="col-md-6">
-                                <label for="{{ profile_form.country.id_for_label }}" class="form-label">Country</label>
-                                {{ profile_form.country }}
+                            <!-- Security Tab -->
+                            <div class="profile-tab" id="security">
+                                <div class="card profile-card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">
+                                            <i class="fas fa-shield-alt text-primary me-2"></i>Security Settings
+                                        </h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="security-item">
+                                            <div class="security-info">
+                                                <h6>Change Password</h6>
+                                                <p class="text-muted">Update your account password for better security</p>
+                                            </div>
+                                            <button class="btn btn-outline-primary">Change Password</button>
+                                        </div>
+                                        <hr>
+                                        <div class="security-item">
+                                            <div class="security-info">
+                                                <h6>Two-Factor Authentication</h6>
+                                                <p class="text-muted">Add an extra layer of security to your account</p>
+                                            </div>
+                                            <button class="btn btn-outline-secondary">Enable 2FA</button>
+                                        </div>
+                                        <hr>
+                                        <div class="security-item">
+                                            <div class="security-info">
+                                                <h6>Login History</h6>
+                                                <p class="text-muted">View your recent login activity</p>
+                                            </div>
+                                            <button class="btn btn-outline-info">View History</button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-
-                        <div class="col-12 mt-4">
-                            <button type="submit" class="btn btn-primary-modern">Save Changes</button>
-                        </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-{% endblock %}
 
-{% block extra_css %}
 <style>
-    /* Custom styles for profile forms to integrate with modern design */
-    input[type="text"], input[type="email"], input[type="file"] {
-        width: 100%;
-        border: 2px solid var(--border-color);
-        border-radius: 12px;
-        padding: 1rem 1.25rem;
-        font-size: 1rem;
-        transition: all 0.3s ease;
-        background: white;
+.profile-main-section {
+    background: none;
+}
+.profile-side-card {
+    background: linear-gradient(135deg, #fef2f2 0%, #fff 100%);
+    border-radius: 2rem;
+    box-shadow: 0 8px 32px rgba(153, 27, 27, 0.08), 0 1.5px 8px rgba(153, 27, 27, 0.04);
+    padding: 2.5rem 1.5rem 2rem 1.5rem;
+    margin-bottom: 2rem;
+    min-height: 420px;
+}
+.profile-avatar {
+    position: relative;
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.profile-image, .profile-image-placeholder {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    border: 4px solid #fff;
+    object-fit: cover;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: #991b1b;
+    box-shadow: 0 2px 12px rgba(153, 27, 27, 0.08);
+}
+.profile-status {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+}
+.status-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    background: #28a745;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.profile-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #991b1b;
+    margin-bottom: 0.2rem;
+}
+.profile-email, .profile-phone {
+    font-size: 1.05rem;
+    color: #991b1b;
+    opacity: 0.9;
+}
+.profile-side-stats {
+    margin-top: 1.2rem;
+}
+.stat-item {
+    min-width: 70px;
+}
+.stat-number {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #991b1b;
+    display: block;
+}
+.stat-label {
+    font-size: 0.8rem;
+    color: #991b1b;
+    opacity: 0.7;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+@media (max-width: 991px) {
+    .profile-main-section .row.g-4 {
+        flex-direction: column;
     }
-    input:focus {
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
-        outline: none;
+    .profile-side-card {
+        margin-bottom: 1.5rem;
+        min-height: unset;
     }
+}
+.profile-right-card {
+    background: linear-gradient(135deg, #fff 60%, #fef2f2 100%);
+    border-radius: 2rem;
+    box-shadow: 0 8px 32px rgba(153, 27, 27, 0.08), 0 1.5px 8px rgba(153, 27, 27, 0.04);
+    padding: 2.5rem 2rem 2rem 2rem;
+    min-height: 420px;
+    margin-bottom: 2rem;
+}
+.themed-nav {
+    background: #fff;
+    border-radius: 1.2rem;
+    box-shadow: 0 2px 10px rgba(153, 27, 27, 0.07);
+    border: 1px solid #f3d6d6;
+    overflow: hidden;
+}
+.profile-right-card .profile-card {
+    background: #fff;
+    border-radius: 1.2rem;
+    box-shadow: 0 2px 10px rgba(153, 27, 27, 0.07);
+    border: 1px solid #f3d6d6;
+    margin-bottom: 1.5rem;
+}
+.profile-right-card .card-header {
+    background: linear-gradient(135deg, #fef2f2 0%, #fff 100%);
+    border-bottom: 1px solid #f3d6d6;
+    border-radius: 1.2rem 1.2rem 0 0;
+    color: #991b1b;
+    font-weight: 600;
+}
+.profile-right-card .card-title {
+    color: #991b1b;
+    font-weight: 700;
+}
+.profile-right-card .btn-primary, .profile-right-card .btn-outline-primary {
+    background: #991b1b;
+    color: #fff;
+    border-radius: 0.7rem;
+    border: none;
+    box-shadow: 0 2px 8px rgba(153, 27, 27, 0.07);
+    transition: background 0.2s;
+}
+.profile-right-card .btn-outline-primary {
+    background: #fff;
+    color: #991b1b;
+    border: 1.5px solid #991b1b;
+}
+.profile-right-card .btn-primary:hover, .profile-right-card .btn-outline-primary:hover {
+    background: #7f1d1d;
+    color: #fff;
+}
+@media (max-width: 991px) {
+    .profile-right-card {
+        padding: 1.5rem 0.5rem 1.5rem 0.5rem;
+        min-height: unset;
+    }
+}
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Tab navigation
+    const navItems = document.querySelectorAll('.nav-item');
+    const tabs = document.querySelectorAll('.profile-tab');
+    
+    navItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const targetTab = this.getAttribute('data-tab');
+            
+            // Remove active class from all items
+            navItems.forEach(nav => nav.classList.remove('active'));
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Add active class to clicked item and target tab
+            this.classList.add('active');
+            document.getElementById(targetTab).classList.add('active');
+        });
+    });
+    
+    // Form validation and enhancement
+    const forms = document.querySelectorAll('form');
+    forms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            const requiredFields = form.querySelectorAll('[required]');
+            let isValid = true;
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    field.classList.remove('is-invalid');
+                }
+            });
+            
+            if (!isValid) {
+                e.preventDefault();
+                alert('Please fill in all required fields.');
+            }
+        });
+    });
+});
+</script>
 {% endblock %} 

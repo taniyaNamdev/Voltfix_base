@@ -4,31 +4,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}VoltFix - Electric Services{% endblock %}</title>
+    <title>{% block title %}Voltfix{% endblock %}</title>
+    <link rel="icon" type="image/jpeg" href="{% static 'images/logo.jpeg' %}">
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom Red & White Theme CSS -->
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts - Modern, clean fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     
     <style>
         :root {
-            --primary-color: #991b1b;
-            --primary-dark: #7f1d1d;
-            --primary-light: #fef2f2;
-            --secondary-color: #ffffff;
-            --text-primary: #1f2937;
-            --text-secondary: #6b7280;
-            --text-light: #9ca3af;
-            --border-color: #e5e7eb;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            --primary-red: #8B0000;
+            --primary-dark: #660000;
+            --primary-light: #DC143C;
+            --secondary-white: #ffffff;
+            --accent-black: #000000;
+            --text-dark: #1a1a1a;
+            --text-gray: #666666;
+            --text-light: #999999;
+            --bg-light: #f8f9fa;
+            --bg-dark: #1a1a1a;
+            --border-light: #e0e0e0;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.15);
+            --shadow-lg: 0 8px 32px rgba(0,0,0,0.2);
+            --gradient-red: linear-gradient(135deg, #dc2626 0%, #8B0000 100%);
+            --gradient-white: linear-gradient(135deg, var(--secondary-white), #f8f9fa);
         }
 
         * {
@@ -38,335 +43,532 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Inter', sans-serif;
             line-height: 1.6;
-            color: var(--text-primary);
-            background-color: var(--secondary-color);
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            color: var(--text-dark);
+            background-color: var(--secondary-white);
+            overflow-x: hidden;
         }
 
-        /* Modern Navigation */
-        .navbar {
-            background: var(--primary-color) !important;
-            color: white !important;
-            border-bottom: 1px solid var(--primary-dark);
-            padding: 1rem 0;
+        /* Header & Navigation - Mistri Style */
+        .header-top {
+            background: var(--primary-red);
+            color: white;
+            padding: 8px 0;
+            font-size: 14px;
+        }
+
+        .header-top .contact-info {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .header-top .contact-info i {
+            color: var(--primary-light);
+            margin-right: 5px;
+        }
+
+        .header-top .social-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .header-top .social-links a {
+            color: white;
             transition: all 0.3s ease;
+        }
+
+        .header-top .social-links a:hover {
+            color: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        /* Main Navigation */
+        .navbar {
+            background: var(--secondary-white) !important;
             box-shadow: var(--shadow-md);
+            padding: 15px 0;
+            transition: all 0.3s ease;
         }
 
         .navbar-brand {
             font-family: 'Poppins', sans-serif;
-            font-weight: 700;
-            font-size: 1.75rem;
+            font-weight: 900;
+            font-size: 2rem;
+            color: var(--primary-red) !important;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .navbar-brand span {
+            color: var(--accent-black);
+        }
+
+        .nav-link {
+            font-weight: 600;
+            color: var(--text-dark) !important;
+            margin: 0 5px;
+            padding: 10px 20px !important;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 14px;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-red) !important;
+            background: var(--primary-red);
             color: white !important;
-            text-decoration: none;
+        }
+
+        .nav-link.active {
+            background: var(--primary-red);
+            color: white !important;
+        }
+
+        /* Floating Free Consultation Button */
+        .floating-consultation-btn {
+            position: fixed;
+            top: 120px;
+            right: 20px;
+            z-index: 1000;
+            animation: bounce 2s infinite;
+        }
+
+        .floating-consultation-btn .btn {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            color: #000;
+            font-weight: 700;
+            font-size: 14px;
+            padding: 12px 20px;
+            border-radius: 25px;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             transition: all 0.3s ease;
             white-space: nowrap;
         }
 
-        .navbar-brand:hover {
-            color: var(--primary-light) !important;
-            transform: translateY(-1px);
+        .floating-consultation-btn .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.6);
+            background: linear-gradient(45deg, #FFA500, #FFD700);
         }
 
-        .nav-link {
-            font-weight: 500;
-            color: white !important;
-            margin: 0 0.5rem;
-            padding: 0.5rem 1rem !important;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            position: relative;
+        .floating-consultation-btn .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
         }
 
-        .nav-link:hover {
-            color: white !important;
-            background-color: rgba(255, 255, 255, 0.1);
-            transform: translateY(-1px);
+        .floating-consultation-btn .btn:hover::before {
+            left: 100%;
         }
 
-        .nav-link.active {
-            color: white !important;
-            background-color: rgba(255, 255, 255, 0.2);
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
         }
 
-        /* Dropdown styling for navbar */
-        .dropdown-menu {
-            background: white;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            box-shadow: var(--shadow-lg);
-            margin-top: 0.5rem;
-        }
-
-        .dropdown-item {
-            color: var(--text-primary);
-            padding: 0.75rem 1.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .dropdown-item:hover {
-            background-color: var(--primary-light);
-            color: var(--primary-color);
-        }
-
-        .dropdown-divider {
-            border-color: var(--border-color);
-            margin: 0.5rem 0;
-        }
-
-        /* Navbar toggler for mobile */
-        .navbar-toggler {
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: white;
-        }
-
-        .navbar-toggler:focus {
-            box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
-        }
-
-        .navbar-toggler-icon {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-        }
-
-        /* Modern Buttons */
-        .btn-modern {
+        /* Buttons - Mistri Style */
+        .btn-mistri {
             font-family: 'Inter', sans-serif;
-            font-weight: 600;
-            padding: 0.75rem 2rem;
-            border-radius: 12px;
+            font-weight: 700;
+            padding: 15px 35px;
+            border-radius: 50px;
             border: none;
             transition: all 0.3s ease;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 10px;
             cursor: pointer;
-            box-shadow: var(--shadow-sm);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 14px;
+            position: relative;
+            overflow: hidden;
         }
 
-        .btn-primary-modern {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        .btn-mistri::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-mistri:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary-mistri {
+            background: var(--gradient-red);
             color: white;
+            box-shadow: var(--shadow-md);
         }
 
-        .btn-primary-modern:hover {
-            transform: translateY(-2px);
+        .btn-primary-mistri:hover {
+            transform: translateY(-3px);
             box-shadow: var(--shadow-lg);
             color: white;
         }
 
-        .btn-secondary-modern {
-            background: white;
-            color: var(--primary-color);
-            border: 2px solid var(--primary-color);
+        .btn-secondary-mistri {
+            background: transparent;
+            color: var(--primary-red);
+            border: 2px solid var(--primary-red);
         }
 
-        .btn-secondary-modern:hover {
-            background: var(--primary-color);
+        .btn-secondary-mistri:hover {
+            background: var(--primary-red);
             color: white;
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
+            transform: translateY(-3px);
         }
 
-        /* Modern Cards */
-        .card-modern {
+        /* Sections */
+        .section-padding {
+            padding: 100px 0;
+        }
+
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            font-size: 3rem;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--primary-red);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .section-description {
+            font-size: 1.1rem;
+            color: var(--text-gray);
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 50px;
+        }
+
+        /* Cards */
+        .card-mistri {
             background: white;
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 2rem;
+            border-radius: 20px;
+            border: none;
             box-shadow: var(--shadow-sm);
             transition: all 0.3s ease;
             overflow: hidden;
         }
 
-        .card-modern:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-xl);
-            border-color: var(--primary-color);
+        .card-mistri:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
         }
 
-        /* Modern Forms */
-        .form-control-modern {
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
-            padding: 1rem 1.25rem;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            background: white;
+        .card-mistri .card-body {
+            padding: 30px;
         }
 
-        .form-control-modern:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
-            outline: none;
-        }
-
-        /* Modern Typography */
-        .heading-primary {
+        .card-mistri .card-title {
             font-family: 'Poppins', sans-serif;
             font-weight: 700;
-            font-size: 3.5rem;
-            line-height: 1.2;
-            color: var(--text-primary);
-            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+            margin-bottom: 15px;
         }
 
-        .heading-secondary {
+        /* Stats */
+        .stat-card {
+            text-align: center;
+            padding: 40px 20px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-number {
             font-family: 'Poppins', sans-serif;
+            font-weight: 900;
+            font-size: 3rem;
+            color: var(--primary-red);
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
             font-weight: 600;
-            font-size: 2.5rem;
-            line-height: 1.3;
-            color: var(--text-primary);
-            margin-bottom: 1rem;
+            color: var(--text-gray);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .text-lead {
-            font-size: 1.25rem;
-            color: var(--text-secondary);
-            line-height: 1.7;
-            margin-bottom: 2rem;
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1621905251189-08b45d6a269e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80') center/cover;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
         }
 
-        /* Modern Spacing */
-        .section-padding {
-            padding: 5rem 0;
+        .hero-content {
+            color: white;
         }
 
-        .page-header-section {
-            padding: 4rem 0;
+        .hero-content h1 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 900;
+            line-height: 1.2;
         }
 
-        .container-modern {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
+        .hero-content .lead {
+            font-size: 1.2rem;
+            line-height: 1.8;
         }
 
-        /* Modern Animations */
+        /* Service Icons */
+        .service-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--gradient-red);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .service-icon:hover {
+            transform: scale(1.1);
+        }
+
+        /* Testimonial Cards */
+        .testimonial-avatar {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-red);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--bg-dark);
+            color: white;
+            padding: 60px 0 20px;
+        }
+
+        .footer h5 {
+            color: var(--primary-red);
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .footer a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: var(--primary-red);
+        }
+
+        .footer-bottom {
+            background: var(--primary-red);
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+
+        /* Animations */
         .fade-in {
             opacity: 0;
             transform: translateY(30px);
-            animation: fadeInUp 0.8s ease forwards;
+            transition: all 0.6s ease;
         }
 
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .slide-in-left {
             opacity: 0;
             transform: translateX(-50px);
-            animation: slideInLeft 0.8s ease forwards;
+            transition: all 0.6s ease;
         }
 
-        @keyframes slideInLeft {
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+        .slide-in-left.visible {
+            opacity: 1;
+            transform: translateX(0);
         }
 
         .slide-in-right {
             opacity: 0;
             transform: translateX(50px);
-            animation: slideInRight 0.8s ease forwards;
+            transition: all 0.6s ease;
         }
 
-        @keyframes slideInRight {
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+        .slide-in-right.visible {
+            opacity: 1;
+            transform: translateX(0);
         }
 
-        /* Modern Grid */
-        .grid-modern {
-            display: grid;
-            gap: 2rem;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        }
-
-        /* Modern Utilities */
-        .text-gradient {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .bg-gradient {
-            background: linear-gradient(135deg, var(--primary-light), white);
-        }
-
-        /* Responsive Design */
+        /* Responsive */
         @media (max-width: 768px) {
-            .heading-primary {
-                font-size: 2.5rem;
-            }
-            
-            .heading-secondary {
+            .section-title {
                 font-size: 2rem;
             }
             
-            .section-padding {
-                padding: 3rem 0;
+            .navbar-brand {
+                font-size: 1.5rem;
             }
             
-            .container-modern {
-                padding: 0 1rem;
+            .btn-mistri {
+                padding: 12px 25px;
+                font-size: 12px;
+            }
+            
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
+
+            .floating-consultation-btn {
+                top: 100px;
+                right: 10px;
+            }
+
+            .floating-consultation-btn .btn {
+                font-size: 12px;
+                padding: 10px 15px;
             }
         }
 
-        /* Modern Footer */
-        .footer-modern {
-            background: var(--text-primary);
-            color: white;
-            padding: 3rem 0 1rem;
-            margin-top: 5rem;
+        @media (max-width: 576px) {
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+            
+            .header-top .contact-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .floating-consultation-btn {
+                display: none;
+            }
         }
 
-        .footer-modern a {
-            color: var(--text-light);
-            text-decoration: none;
-            transition: color 0.3s ease;
+        /* Utility Classes */
+        .text-primary-mistri {
+            color: var(--primary-red) !important;
         }
 
-        .footer-modern a:hover {
-            color: var(--primary-color);
+        .bg-primary-mistri {
+            background: var(--primary-red) !important;
         }
 
-        /* Cart Badge */
-        .cart-badge {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background: var(--primary-color);
-            color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            font-size: 0.75rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
+        .border-primary-mistri {
+            border-color: var(--primary-red) !important;
+        }
+
+        /* Counter Animation */
+        .counter-animation {
+            transition: all 0.3s ease;
+        }
+
+        /* Loading States */
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        /* Success/Error States */
+        .success {
+            color: #28a745;
+        }
+
+        .error {
+            color: #dc3545;
         }
     </style>
-    
+
     {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <!-- Modern Navigation -->
-    <nav class="navbar navbar-expand-lg fixed-top">
+    <!-- Header Top -->
+    <div class="header-top">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="contact-info">
+                        <span><i class="fas fa-envelope"></i> info@voltfix.com</span>
+                        <span><i class="fas fa-phone"></i> +1 (555) 123-4567</span>
+                    </div>
+                </div>
+                <div class="col-md-6 text-end">
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation -->
+    <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
             <a class="navbar-brand" href="{% url 'welcome' %}">
-                <i class="fas fa-bolt me-2"></i>VoltFix
+                <img src="{% static 'images/logo.jpeg' %}" alt="VoltFix Logo" style="height:54px; margin-right:10px; vertical-align:middle;">
+                VOLT<span>FIX</span>
             </a>
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -374,57 +576,67 @@
             </button>
             
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
+                <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'welcome' %}">
-                            <i class="fas fa-home me-1"></i>Home
+                        <a class="nav-link {% if request.resolver_match.url_name == 'welcome' %}active{% endif %}" href="{% url 'welcome' %}">
+                            <i class="fas fa-home"></i> Home
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'services_overview' %}">
-                            <i class="fas fa-tools me-1"></i>Services
+                        <a class="nav-link {% if request.resolver_match.url_name == 'about_us' %}active{% endif %}" href="{% url 'about_us' %}">
+                            <i class="fas fa-info-circle"></i> About
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'products' %}">
-                            <i class="fas fa-shopping-cart me-1"></i>Products
+                        <a class="nav-link {% if request.resolver_match.url_name == 'services_overview' %}active{% endif %}" href="{% url 'services_overview' %}">
+                            <i class="fas fa-tools"></i> Services
                         </a>
                     </li>
-                </ul>
-                
-                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'products' %}active{% endif %}" href="{% url 'products' %}">
+                            <i class="fas fa-shopping-cart"></i> Products
+                        </a>
+                    </li>
                     {% if user.is_authenticated %}
-                        <li class="nav-item me-3">
-                            <a class="nav-link position-relative" href="{% url 'cart' %}">
-                                <i class="fas fa-shopping-bag"></i>
-                                {% if cart_items_count > 0 %}
-                                    <span class="cart-badge">{{ cart_items_count }}</span>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'cart' %}active{% endif %}" href="{% url 'cart' %}">
+                                <i class="fas fa-shopping-bag"></i> Cart
+                                {% if user.cart.item_count > 0 %}
+                                    <span class="badge bg-danger ms-1">{{ user.cart.item_count }}</span>
                                 {% endif %}
                             </a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-user me-1"></i>{{ user.username }}
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{% url 'profile' %}">
-                                    <i class="fas fa-user-circle me-2"></i>Profile
-                                </a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{% url 'logout' %}">
-                                    <i class="fas fa-sign-out-alt me-2"></i>Logout
-                                </a></li>
-                            </ul>
-                        </li>
-                    {% else %}
-                        <li class="nav-item me-2">
-                            <a class="btn btn-secondary-modern" href="{% url 'login' %}">
-                                <i class="fas fa-sign-in-alt me-1"></i>Login
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'contact_us' %}active{% endif %}" href="{% url 'contact_us' %}">
+                            <i class="fas fa-envelope"></i> Contact
+                        </a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'profile' %}">
+                                <i class="fas fa-user"></i> Profile
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="btn btn-primary-modern" href="{% url 'register' %}">
-                                <i class="fas fa-user-plus me-1"></i>Sign Up
+                            <a class="nav-link {% if request.resolver_match.url_name == 'booking_history' %}active{% endif %}" href="{% url 'booking_history' %}">
+                                <i class="fas fa-calendar-check"></i> My Bookings
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'account_logout' %}">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'account_login' %}">
+                                <i class="fas fa-sign-in-alt"></i> Login
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'account_signup' %}">
+                                <i class="fas fa-user-plus"></i> Register
                             </a>
                         </li>
                     {% endif %}
@@ -433,68 +645,71 @@
         </div>
     </nav>
 
+    <!-- Floating Free Consultation Button -->
+    <div class="floating-consultation-btn">
+        <a href="{% url 'contact_us' %}" class="btn">
+            <i class="fas fa-gift me-2"></i>FREE Consultation
+        </a>
+    </div>
+
     <!-- Main Content -->
-    <main style="padding-top: 100px;">
+    <main>
         {% block content %}{% endblock %}
     </main>
 
-    <!-- Modern Footer -->
-    <footer class="footer-modern">
-        <div class="container-modern">
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
             <div class="row">
-                <div class="col-md-4 mb-4">
-                    <h5 class="mb-3">
-                        <i class="fas fa-bolt me-2"></i>VoltFix
-                    </h5>
-                    <p class="text-muted">
-                        Your trusted partner for all electrical services and products. 
-                        Professional, reliable, and efficient solutions for your electrical needs.
-                    </p>
-                </div>
-                <div class="col-md-2 mb-4">
-                    <h6 class="mb-3">Services</h6>
-                    <ul class="list-unstyled">
-                        <li><a href="{% url 'services_overview' %}">Electrical Repair</a></li>
-                        <li><a href="{% url 'services_overview' %}">Installation</a></li>
-                        <li><a href="{% url 'services_overview' %}">Maintenance</a></li>
-                        <li><a href="{% url 'services_overview' %}">Emergency Service</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-2 mb-4">
-                    <h6 class="mb-3">Products</h6>
-                    <ul class="list-unstyled">
-                        <li><a href="{% url 'products' %}">Lighting</a></li>
-                        <li><a href="{% url 'products' %}">Switches</a></li>
-                        <li><a href="{% url 'products' %}">Cables</a></li>
-                        <li><a href="{% url 'products' %}">Tools</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <h6 class="mb-3">Contact Us</h6>
-                    <p class="text-muted mb-2">
-                        <i class="fas fa-phone me-2"></i>+1 (555) 123-4567
-                    </p>
-                    <p class="text-muted mb-2">
-                        <i class="fas fa-envelope me-2"></i>info@voltfix.com
-                    </p>
-                    <p class="text-muted">
-                        <i class="fas fa-map-marker-alt me-2"></i>123 Electric Ave, Power City
-                    </p>
-                </div>
-            </div>
-            <hr class="my-4">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <p class="text-muted mb-0">
-                        © 2024 VoltFix. All rights reserved.
-                    </p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <div class="social-links">
-                        <a href="#" class="me-3"><i class="fab fa-facebook"></i></a>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h5>About VoltFix</h5>
+                    <p>Professional electrical services and premium products to keep your home safe, efficient, and powered for the future.</p>
+                    <div class="social-links mt-3">
+                        <a href="#" class="me-3"><i class="fab fa-facebook-f"></i></a>
                         <a href="#" class="me-3"><i class="fab fa-twitter"></i></a>
                         <a href="#" class="me-3"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="me-3"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'welcome' %}">Home</a></li>
+                        <li><a href="{% url 'about_us' %}">About Us</a></li>
+                        <li><a href="{% url 'services_overview' %}">Services</a></li>
+                        <li><a href="{% url 'products' %}">Products</a></li>
+                        <li><a href="{% url 'contact_us' %}">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Services</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#">Electrical Installation</a></li>
+                        <li><a href="#">Maintenance & Repair</a></li>
+                        <li><a href="#">Emergency Services</a></li>
+                        <li><a href="#">Safety Inspections</a></li>
+                        <li><a href="#">Product Sales</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5>Contact Info</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-map-marker-alt me-2"></i> 123 Electric Ave, City, State</li>
+                        <li><i class="fas fa-phone me-2"></i> +1 (555) 123-4567</li>
+                        <li><i class="fas fa-envelope me-2"></i> info@voltfix.com</li>
+                        <li><i class="fas fa-clock me-2"></i> 24/7 Emergency Service</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <p class="mb-0">&copy; 2024 VoltFix. All rights reserved.</p>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <p class="mb-0">Designed with <i class="fas fa-heart text-danger"></i> for electrical excellence</p>
                     </div>
                 </div>
             </div>
@@ -503,30 +718,78 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS Animation -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     
     <script>
-        // Add animation classes to elements when they come into view
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+
+        // Scroll animations
+        function animateOnScroll() {
+            const elements = document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right');
+            
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('visible');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', animateOnScroll);
+        animateOnScroll(); // Run on page load
+
+        // Counter animation
+        function animateCounters() {
+            const counters = document.querySelectorAll('[data-target]');
+            
+            counters.forEach(counter => {
+                const target = parseInt(counter.getAttribute('data-target'));
+                const duration = 2000; // 2 seconds
+                const increment = target / (duration / 16); // 60fps
+                let current = 0;
+                
+                const updateCounter = () => {
+                    current += increment;
+                    if (current < target) {
+                        counter.textContent = Math.floor(current);
+                        requestAnimationFrame(updateCounter);
+                    } else {
+                        counter.textContent = target;
+                    }
+                };
+                
+                updateCounter();
+            });
+        }
+
+        // Trigger counter animation when in view
         const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
+            threshold: 0.5,
+            rootMargin: '0px 0px -100px 0px'
         };
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.style.animationDelay = entry.target.dataset.delay || '0s';
-                    entry.target.classList.add('fade-in');
+                    animateCounters();
+                    observer.unobserve(entry.target);
                 }
             });
         }, observerOptions);
 
-        // Observe all cards and sections
-        document.addEventListener('DOMContentLoaded', () => {
-            const animatedElements = document.querySelectorAll('.card-modern, .section-padding');
-            animatedElements.forEach(el => observer.observe(el));
+        document.querySelectorAll('.stat-card').forEach(card => {
+            observer.observe(card);
         });
     </script>
-    
+
     {% block extra_js %}{% endblock %}
 </body>
 </html> 

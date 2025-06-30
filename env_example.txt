@@ -1,0 +1,24 @@
+# Django Settings
+SECRET_KEY=your-secret-key-here
+DEBUG=True
+ALLOWED_HOSTS=localhost,127.0.0.1
+
+# Database Settings
+DB_NAME=Voltdix_dev
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_HOST=localhost
+DB_PORT=5432
+
+# AWS S3 Settings
+USE_S3=False
+AWS_ACCESS_KEY_ID=your-aws-access-key-id
+AWS_SECRET_ACCESS_KEY=your-aws-secret-access-key
+AWS_STORAGE_BUCKET_NAME=your-bucket-name
+AWS_S3_REGION_NAME=us-east-1
+
+# Social Authentication Settings
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+FACEBOOK_APP_ID=your-facebook-app-id
+FACEBOOK_APP_SECRET=your-facebook-app-secret 

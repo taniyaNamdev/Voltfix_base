@@ -1,0 +1,390 @@
+{% extends 'electric_services/base.html' %}
+{% load static %}
+
+{% block title %}Contact Us - VoltFix{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="section-padding" style="background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80') center/cover;">
+    <div class="container">
+        <div class="text-center text-white" data-aos="fade-up">
+            <h6 class="section-subtitle text-white">Contact Us</h6>
+            <h1 class="section-title text-white">Get in touch with our expert team</h1>
+            <p class="section-description text-white">
+                We're here to help with all your electrical needs. Contact us today for professional service.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Free Consultation Highlight Section -->
+<section class="section-padding" style="background: #CFF4FC;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8" data-aos="fade-right">
+                <div class="consultation-highlight">
+                    <div class="mb-3">
+                        <span class="badge bg-dark text-warning px-3 py-2" style="font-size: 1rem; font-weight: 700;">
+                            <i class="fas fa-star me-2"></i>SPECIAL OFFER
+                        </span>
+                    </div>
+                    <h2 class="text-dark fw-bold mb-3">FREE CONSULTATION AVAILABLE</h2>
+                    <p class="lead text-dark mb-4" style="font-size: 1.3rem;">
+                        Book your <strong>FREE consultation</strong> today! Get professional electrical assessment, 
+                        safety inspection, and personalized recommendations from our certified experts. 
+                        No obligation, no hidden fees.
+                    </p>
+                    <div class="consultation-benefits mb-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fas fa-check-circle text-dark me-2"></i>
+                                    <span class="fw-bold text-dark">Professional Assessment</span>
+                                </div>
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fas fa-check-circle text-dark me-2"></i>
+                                    <span class="fw-bold text-dark">Safety Inspection</span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fas fa-check-circle text-dark me-2"></i>
+                                    <span class="fw-bold text-dark">No Obligation</span>
+                                </div>
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fas fa-check-circle text-dark me-2"></i>
+                                    <span class="fw-bold text-dark">Written Quote</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="consultation-actions">
+                        <a href="tel:+15551234567" class="btn btn-dark btn-lg me-3" style="font-weight: 700;">
+                            <i class="fas fa-phone me-2"></i>Call Now for Free Consultation
+                        </a>
+                        <a href="#contact-form" class="btn btn-outline-dark btn-lg" style="font-weight: 700;">
+                            <i class="fas fa-calendar-check me-2"></i>Book Online
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4" data-aos="fade-left">
+                <div class="text-center">
+                    <div class="consultation-card bg-white rounded-3 p-4" style="box-shadow: var(--shadow-lg);">
+                        <i class="fas fa-gift text-warning mb-3" style="font-size: 4rem;"></i>
+                        <h4 class="fw-bold text-dark mb-3">FREE Consultation</h4>
+                        <p class="text-muted mb-3">Professional electrical assessment at no cost</p>
+                        <div class="consultation-value">
+                            <p class="text-decoration-line-through text-muted mb-1">Value: $150</p>
+                            <h3 class="text-success fw-bold mb-0">FREE</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Information Section -->
+<section class="section-padding" id="contact-form">
+    <div class="container">
+        <div class="row g-5">
+            <!-- Contact Form -->
+            <div class="col-lg-8" data-aos="fade-right">
+                <div class="card card-mistri">
+                    <div class="card-body">
+                        <h2 class="card-title mb-4">Send Us a Message</h2>
+                        <form class="contact-form" id="contactForm">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="firstName" class="form-label fw-bold">First Name *</label>
+                                        <input type="text" class="form-control" id="firstName" name="firstName" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="lastName" class="form-label fw-bold">Last Name *</label>
+                                        <input type="text" class="form-control" id="lastName" name="lastName" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="email" class="form-label fw-bold">Email Address *</label>
+                                        <input type="email" class="form-control" id="email" name="email" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="phone" class="form-label fw-bold">Phone Number</label>
+                                        <input type="tel" class="form-control" id="phone" name="phone">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="service" class="form-label fw-bold">Service Needed</label>
+                                        <select class="form-select" id="service" name="service">
+                                            <option value="">Select a service</option>
+                                            <option value="free-consultation">FREE Consultation</option>
+                                            <option value="electrical-repair">Electrical Repair</option>
+                                            <option value="installation">New Installation</option>
+                                            <option value="maintenance">Maintenance</option>
+                                            <option value="emergency">Emergency Service</option>
+                                            <option value="inspection">Safety Inspection</option>
+                                            <option value="upgrade">Electrical Upgrade</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="message" class="form-label fw-bold">Message *</label>
+                                        <textarea class="form-control" id="message" name="message" rows="5" 
+                                                  placeholder="Describe your electrical needs or project details..." required></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="urgent" name="urgent">
+                                        <label class="form-check-label" for="urgent">
+                                            This is an urgent request
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="freeConsultation" name="freeConsultation" checked>
+                                        <label class="form-check-label fw-bold text-success" for="freeConsultation">
+                                            <i class="fas fa-gift me-2"></i>I would like a FREE consultation
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary-mistri">
+                                        <i class="fas fa-paper-plane me-2"></i>Send Message
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Contact Information -->
+            <div class="col-lg-4" data-aos="fade-left">
+                <div class="contact-info-container">
+                    <h3 class="mb-4" style="color: var(--primary-red); font-weight: 700;">Get In Touch</h3>
+                    
+                    <!-- Phone -->
+                    <div class="contact-item mb-4">
+                        <div class="d-flex align-items-start">
+                            <div class="contact-icon me-3">
+                                <i class="fas fa-phone text-primary-mistri" style="font-size: 1.5rem;"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h5 class="fw-bold">Phone</h5>
+                                <p class="mb-1">+1 (555) 123-4567</p>
+                                <small class="text-muted">24/7 Emergency Service</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Email -->
+                    <div class="contact-item mb-4">
+                        <div class="d-flex align-items-start">
+                            <div class="contact-icon me-3">
+                                <i class="fas fa-envelope text-primary-mistri" style="font-size: 1.5rem;"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h5 class="fw-bold">Email</h5>
+                                <p class="mb-1">info@voltfix.com</p>
+                                <small class="text-muted">We'll respond within 24 hours</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Address -->
+                    <div class="contact-item mb-4">
+                        <div class="d-flex align-items-start">
+                            <div class="contact-icon me-3">
+                                <i class="fas fa-map-marker-alt text-primary-mistri" style="font-size: 1.5rem;"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h5 class="fw-bold">Address</h5>
+                                <p class="mb-1">123 Electric Ave, City, State 12345</p>
+                                <small class="text-muted">Main Office</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Business Hours -->
+                    <div class="contact-item mb-4">
+                        <div class="d-flex align-items-start">
+                            <div class="contact-icon me-3">
+                                <i class="fas fa-clock text-primary-mistri" style="font-size: 1.5rem;"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h5 class="fw-bold">Business Hours</h5>
+                                <div class="hours-text">
+                                    <p class="mb-1">Monday - Friday: 8:00 AM - 6:00 PM</p>
+                                    <p class="mb-1">Saturday: 9:00 AM - 4:00 PM</p>
+                                    <p class="mb-1">Sunday: Emergency Service Only</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Emergency Contact -->
+                    <div class="card card-mistri">
+                        <div class="card-body text-center">
+                            <i class="fas fa-exclamation-triangle text-warning mb-3" style="font-size: 2rem;"></i>
+                            <h5 class="fw-bold">Emergency Service</h5>
+                            <p class="text-muted mb-3">Available 24/7 for urgent electrical issues</p>
+                            <a href="tel:+15551234567" class="btn btn-warning">
+                                <i class="fas fa-phone me-2"></i>Call Now
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Map Section -->
+<section class="section-padding bg-light">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h6 class="section-subtitle">Find Us</h6>
+            <h2 class="section-title">Visit our office or let us come to you</h2>
+        </div>
+        
+        <div class="card card-mistri" data-aos="fade-up">
+            <div class="card-body">
+                <div class="map-content text-center">
+                    <i class="fas fa-map-marked-alt text-primary-mistri mb-3" style="font-size: 4rem;"></i>
+                    <h4 class="fw-bold">Interactive Map</h4>
+                    <p class="text-muted">Our office location and service areas</p>
+                    <div class="map-info mt-4">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <div class="map-stat">
+                                    <h5 class="text-primary-mistri fw-bold">50+</h5>
+                                    <p class="text-muted small">Service Areas</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="map-stat">
+                                    <h5 class="text-primary-mistri fw-bold">24/7</h5>
+                                    <p class="text-muted small">Emergency Response</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="map-stat">
+                                    <h5 class="text-primary-mistri fw-bold">30min</h5>
+                                    <p class="text-muted small">Average Response</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="section-padding">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h6 class="section-subtitle">Frequently Asked Questions</h6>
+            <h2 class="section-title">Common questions about our services</h2>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                <div class="card card-mistri h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="fas fa-question-circle text-primary-mistri me-2"></i>
+                            What areas do you serve?
+                        </h5>
+                        <p class="card-text">
+                            We provide electrical services throughout the greater metropolitan area, 
+                            including residential, commercial, and industrial properties within a 
+                            50-mile radius of our main office.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+                <div class="card card-mistri h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="fas fa-question-circle text-primary-mistri me-2"></i>
+                            How quickly can you respond to emergencies?
+                        </h5>
+                        <p class="card-text">
+                            Our emergency response team is available 24/7 and typically arrives 
+                            within 30 minutes for urgent electrical issues that pose safety risks.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="300">
+                <div class="card card-mistri h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="fas fa-question-circle text-primary-mistri me-2"></i>
+                            Are your technicians licensed and insured?
+                        </h5>
+                        <p class="card-text">
+                            Yes, all our technicians are fully licensed, bonded, and insured. 
+                            We maintain the highest safety standards and carry comprehensive 
+                            liability insurance for your protection.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="400">
+                <div class="card card-mistri h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="fas fa-question-circle text-primary-mistri me-2"></i>
+                            Do you provide free estimates?
+                        </h5>
+                        <p class="card-text">
+                            We offer free estimates for most electrical projects. For complex 
+                            installations or large commercial projects, we provide detailed 
+                            quotes after an initial consultation.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="section-padding" style="background: var(--gradient-red);">
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8" data-aos="fade-up">
+                <h2 class="text-white mb-4">Ready to Get Started?</h2>
+                <p class="text-white mb-4" style="font-size: 1.2rem;">
+                    Contact us today for professional electrical services. We're here to help 
+                    with all your electrical needs!
+                </p>
+                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                    <a href="tel:+15551234567" class="btn btn-secondary-mistri">
+                        <i class="fas fa-phone me-2"></i>Call Now
+                    </a>
+                    <a href="mailto:info@voltfix.com" class="btn btn-secondary-mistri">
+                        <i class="fas fa-envelope me-2"></i>Email Us
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %} 

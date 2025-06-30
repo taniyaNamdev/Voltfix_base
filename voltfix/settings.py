@@ -13,6 +13,16 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 
+# Load environment variables from .env file
+from dotenv import load_dotenv
+load_dotenv()
+
+# Import storages for S3 configuration
+try:
+    import storages
+except ImportError:
+    storages = None
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -41,6 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',  # Required for django-allauth
     'electric_services',
+    'storages',  # For S3 storage
     
     # django-allauth
     'allauth',
@@ -74,6 +85,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'electric_services.context_processors.cart_context',
             ],
         },
     },
@@ -143,6 +155,32 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+# AWS S3 Configuration
+USE_S3 = os.getenv('USE_S3', 'False') == 'True'
+
+if USE_S3:
+    # AWS Settings
+    AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
+    AWS_DEFAULT_ACL = 'public-read'
+    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+    AWS_S3_OBJECT_PARAMETERS = {
+        'CacheControl': 'max-age=86400',
+    }
+    
+    # S3 Static settings
+    STATICFILES_STORAGE = 'electric_services.storage.StaticStorage'
+    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/static/'
+    
+    # S3 Media settings
+    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
+    DEFAULT_FILE_STORAGE = 'electric_services.storage.MediaStorage'
+else:
+    # Local storage settings (for development)
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
@@ -158,13 +196,22 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # Allauth settings
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_LOGIN_METHODS = {'email'}
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
+ACCOUNT_EMAIL_VERIFICATION = 'none'
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 3
-ACCOUNT_EMAIL_CONFIRMATION_COOLDOWN = 180
+ACCOUNT_RATE_LIMITS = {
+    'confirm_email': '5/m',
+}
+
+# Email backend for development (console output)
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 1025
+EMAIL_USE_TLS = False
+EMAIL_HOST_USER = ''
+EMAIL_HOST_PASSWORD = ''
 
 # Social account settings
 SOCIALACCOUNT_AUTO_SIGNUP = True
@@ -223,19 +270,10 @@ JAZZMIN_SETTINGS = {
     "site_brand": "VoltFix",
     
     # Logo to use for your site, must be present in static files, used for brand on top left
-    "site_logo": None,
+    "site_logo": "images/logo.jpeg",
     
     # Logo to use for your site, must be present in static files, used for login form logo (defaults to site_logo)
-    "login_logo": None,
-    
-    # Logo to use for login form in dark themes (defaults to login_logo)
-    "login_logo_dark": None,
-    
-    # CSS classes that are applied to the logo above
-    "site_logo_classes": "img-circle",
-    
-    # Relative path to a favicon for your site, will default to site_logo if absent (ideally 32x32 px)
-    "site_icon": None,
+    "login_logo": "images/logo.jpeg",
     
     # Welcome text on the login screen
     "welcome_sign": "Welcome to VoltFix Admin Panel",
@@ -244,7 +282,6 @@ JAZZMIN_SETTINGS = {
     "copyright": "VoltFix Ltd",
     
     # List of model admins to search from the search bar, search bar omitted if excluded
-    # If you want to use a single search field you dont need to use a list, you can use a simple string 
     "search_model": ["electric_services.ElectricProduct", "electric_services.UserProfile"],
     
     # Field name on user model that contains avatar ImageField/URLField/Charfield or a callable that receives the user
@@ -290,14 +327,6 @@ JAZZMIN_SETTINGS = {
         "socialaccount.socialtoken": "fas fa-key",
     },
     
-    # Custom icons for side menu apps/models when collapsed
-    "icons_collapsed": {
-        "auth": "fas fa-users-cog",
-        "electric_services": "fas fa-bolt",
-        "sites": "fas fa-globe",
-        "socialaccount": "fas fa-share-alt",
-    },
-    
     # Icons that are used when one is not manually specified
     "default_icon_parents": "fas fa-chevron-circle-right",
     "default_icon_children": "fas fa-circle",
@@ -311,10 +340,6 @@ JAZZMIN_SETTINGS = {
     #############
     # UI Tweaks #
     #############
-    # Relative paths to custom CSS/JS scripts (must be present in static files)
-    "custom_css": "css/admin-custom.css",
-    "custom_js": None,
-    
     # Whether to show the UI customizer on the sidebar
     "show_ui_builder": True,
     
@@ -339,31 +364,31 @@ JAZZMIN_SETTINGS = {
     "language_chooser": False,
 }
 
-# Jazzmin UI Tweaks - Enhanced for modern dark red and white theme
+# Jazzmin UI Tweaks - Modern blue/dark theme
 JAZZMIN_UI_TWEAKS = {
     "navbar_small_text": False,
     "footer_small_text": False,
     "body_small_text": False,
     "brand_small_text": False,
-    "brand_colour": "navbar-dark",
-    "accent": "accent-danger",
-    "navbar": "navbar-dark",  # Dark navbar with white text
+    "brand_colour": "navbar-primary",
+    "accent": "accent-primary",
+    "navbar": "navbar-primary",
     "no_navbar_border": True,
     "navbar_fixed": True,
     "layout_boxed": False,
     "footer_fixed": False,
     "sidebar_fixed": True,
-    "sidebar": "sidebar-light-danger",
+    "sidebar": "sidebar-dark-primary",
     "sidebar_nav_small_text": False,
     "sidebar_disable_expand": False,
     "sidebar_nav_child_indent": True,
     "sidebar_nav_compact_style": False,
     "sidebar_nav_legacy_style": False,
     "sidebar_nav_flat_style": False,
-    "theme": "journal",
+    "theme": "flatly",
     "dark_mode_theme": None,
     "button_classes": {
-        "primary": "btn-danger",
+        "primary": "btn-primary",
         "secondary": "btn-outline-secondary",
         "info": "btn-info",
         "warning": "btn-warning",

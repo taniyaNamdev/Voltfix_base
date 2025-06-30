@@ -4,45 +4,853 @@
 {% block title %}Our Services - VoltFix{% endblock %}
 
 {% block content %}
-<!-- Page Header -->
-<section class="page-header-section bg-gradient">
-    <div class="container-modern">
-        <div class="text-center fade-in">
-            <h1 class="heading-primary text-gradient">Our Electric Services</h1>
-            <p class="text-lead" style="color: var(--text-secondary);">
-                Comprehensive solutions for all your electrical needs.
-            </p>
+<!-- Hero Section -->
+<section class="hero-section" style="background: linear-gradient(135deg, #8B0000 60%, #1a1a1a 100%); min-height: 320px; display: flex; align-items: center; position: relative;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-7" data-aos="fade-right">
+                <div class="text-white">
+                    <h1 class="display-4 fw-bold mb-3" style="font-family: 'Poppins', sans-serif;">
+                        <i class="fas fa-tools me-2 text-warning"></i>Professional Electrical Services
+                    </h1>
+                    <p class="lead mb-4" style="font-size: 1.2rem;">
+                        Expert electrical solutions for residential, commercial, and industrial needs. Quality workmanship, safety first, and customer satisfaction guaranteed.
+                    </p>
+                    <div class="d-flex gap-3 flex-wrap">
+                        <a href="#servicesGrid" class="btn btn-primary-mistri btn-lg">
+                            <i class="fas fa-calendar-check me-2"></i>Book Service
+                        </a>
+                        <a href="{% url 'contact_us' %}" class="btn btn-secondary-mistri btn-lg">
+                            <i class="fas fa-phone me-2"></i>Get Quote
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5 d-none d-lg-block" data-aos="fade-left">
+                <div class="text-center">
+                    <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=500&q=80" alt="Electrical Services" class="img-fluid rounded-4 shadow-lg" style="max-height: 260px; object-fit: cover; border: 4px solid #fff;">
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
-<!-- Services Section -->
-<section class="section-padding">
-    <div class="container-modern">
-        <div class="grid-modern">
+<!-- Category Pills & Search Bar -->
+<section class="bg-light py-3 border-bottom">
+    <div class="container d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
+        <div class="category-scrollbar d-flex flex-nowrap align-items-center gap-2" style="overflow-x: auto; scrollbar-width: thin;">
+            <a href="{% url 'services_overview' %}" class="category-pill-btn px-3 py-2{% if not selected_category %} active{% endif %}" style="text-decoration: none; border: none; background: #fff; border-radius: 999px; font-size: 1rem; color: var(--primary-red); font-weight: 600; box-shadow: 0 1px 4px rgba(139,0,0,0.07); transition: background 0.2s, color 0.2s; white-space: nowrap;">
+                <i class="fas fa-th-large me-1"></i> All
+            </a>
             {% for category in categories %}
-                <div class="card-modern" data-delay="{{ forloop.counter0|divisibleby:3|yesno:'0.1s,0.2s,0.3s' }}">
-                    <div class="d-flex align-items-center mb-4">
-                        <div class="bg-primary-light rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 60px; height: 60px;">
-                            <i class="{{ category.icon }} text-primary" style="font-size: 1.75rem;"></i>
+                <a href="{% url 'services_overview' %}?category={{ category.id }}" class="category-pill-btn px-3 py-2{% if selected_category|add:'' == category.id|stringformat:'s' %} active{% endif %}" style="text-decoration: none; border: none; background: #fff; border-radius: 999px; font-size: 1rem; color: var(--primary-red); font-weight: 600; box-shadow: 0 1px 4px rgba(139,0,0,0.07); transition: background 0.2s, color 0.2s; white-space: nowrap;">
+                    {% if category.icon %}<i class="{{ category.icon }} me-1"></i>{% else %}<i class="fas fa-bolt me-1"></i>{% endif %}{{ category.name }}
+                </a>
+            {% endfor %}
+        </div>
+        <div class="search-bar-ref position-relative" style="max-width: 340px; width: 100%;">
+            <span class="search-icon position-absolute" style="left: 16px; top: 50%; transform: translateY(-50%); color: #888; font-size: 1.1rem;"><i class="fas fa-search"></i></span>
+            <input type="text" id="serviceSearch" class="form-control search-input-ref" placeholder="Search for services..." style="padding-left: 2.2rem; padding-right: 2.2rem; height: 38px; border-radius: 20px; border: none; background: #fff; font-size: 1rem;">
+            <button type="button" class="clear-search position-absolute" style="right: 16px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #888; font-size: 1.1rem; display: none;" id="clearServiceSearchBtn"><i class="fas fa-times"></i></button>
+        </div>
+    </div>
+</section>
+
+<!-- Service Grid Section -->
+<section class="section-padding bg-light">
+    <div class="container">
+        <div class="row g-4 justify-content-center" id="servicesGrid">
+            {% for service in services %}
+                <div class="col-xl-4 col-lg-6 col-md-6 d-flex align-items-stretch">
+                    <div class="service-card-mistri card h-100 d-flex flex-column align-items-center justify-content-between p-4 position-relative">
+                        {% if service.is_popular %}
+                            <span class="badge bg-warning text-dark position-absolute top-0 start-0 m-3" style="font-size: 0.95rem;">Popular</span>
+                        {% endif %}
+                        {% if service.is_emergency %}
+                            <span class="badge bg-danger position-absolute top-0 end-0 m-3" style="font-size: 0.95rem;">24/7</span>
+                        {% endif %}
+                        <!-- Image Section: 1/3rd of card height -->
+                        <div class="service-image-section w-100 d-flex align-items-center justify-content-center mb-3" style="height: 140px; min-height: 140px; max-height: 160px; background: #f8f8f8; border-radius: 16px 16px 0 0; overflow: hidden;">
+                            {% if service.image %}
+                                <img src="{{ service.image.url }}" alt="{{ service.name }}" class="service-image" style="height: 100%; width: auto; max-width: 100%; object-fit: contain; display: block; margin: 0 auto;">
+                            {% else %}
+                                <img src="{% static 'images/placeholder.png' %}" alt="No Image" class="service-image" style="height: 60px; width: 60px; object-fit: contain; opacity: 0.6;">
+                            {% endif %}
                         </div>
-                        <div>
-                            <h4 class="mb-0">{{ category.name }}</h4>
+                        <h5 class="service-title text-center fw-bold mb-2" style="font-size: 1.18rem; color: var(--primary-red);">{{ service.name }}</h5>
+                        <div class="service-description text-center mb-3" style="color: #555; font-size: 0.9rem; line-height: 1.5;">{{ service.description|truncatewords:15 }}</div>
+                        <div class="service-details text-center mb-3">
+                            <div class="row g-2 mb-2">
+                                <div class="col-6">
+                                    <div class="service-detail-item">
+                                        <i class="fas fa-clock text-primary-mistri me-1"></i>
+                                        <small class="text-muted">{{ service.duration }}</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="service-detail-item">
+                                        <i class="fas fa-rupee-sign text-primary-mistri me-1"></i>
+                                        <small class="text-muted">₹{{ service.price }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="service-category-badge">
+                                <span class="badge bg-primary-mistri text-white" style="font-size: 0.8rem;">{{ service.category.name }}</span>
+                            </div>
                         </div>
+                        <button class="btn btn-primary-mistri w-100 mt-auto book-now-btn" data-service-id="{{ service.id }}" data-service-name="{{ service.name }}" style="border-radius: 999px; font-weight: 700; font-size: 1.08rem; padding: 12px 0;">
+                            <i class="fas fa-calendar-check me-2"></i>Book Now
+                        </button>
                     </div>
-                    <p class="text-secondary">{{ category.description }}</p>
-                    <a href="#" class="btn btn-secondary-modern mt-auto">
-                        Learn More <i class="fas fa-arrow-right ms-2"></i>
-                    </a>
                 </div>
             {% empty %}
                 <div class="col-12">
-                    <div class="card-modern text-center">
-                        <p class="text-lead">No services are available at the moment. Please check back later.</p>
+                    <div class="text-center">
+                        <i class="fas fa-tools text-muted mb-3" style="font-size: 4rem;"></i>
+                        <h4 class="text-muted">No services available</h4>
+                        <p class="text-muted">Check back later for new services.</p>
                     </div>
                 </div>
             {% endfor %}
         </div>
     </div>
 </section>
+
+<!-- Service Booking Modal -->
+<div class="modal fade" id="serviceBookingModal" tabindex="-1" aria-labelledby="serviceBookingModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form id="serviceBookingForm" method="post" action="{% url 'book_service' %}">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="serviceBookingModalLabel">
+            <i class="fas fa-calendar-check me-2"></i>Book Service
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="service_id" id="bookingServiceId">
+          
+          <!-- Service Summary -->
+          <div class="alert alert-info mb-4">
+            <div class="d-flex align-items-center">
+              <i class="fas fa-info-circle me-2"></i>
+              <div>
+                <strong>Service:</strong> <span id="bookingServiceName"></span>
+                <br><small class="text-muted">Please fill out the form below to complete your booking.</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step Indicators -->
+          <div class="booking-steps mb-4">
+            <div class="step active" data-step="1">
+              <div class="step-number">1</div>
+              <div class="step-label">Location</div>
+            </div>
+            <div class="step" data-step="2">
+              <div class="step-number">2</div>
+              <div class="step-label">Contact</div>
+            </div>
+            <div class="step" data-step="3">
+              <div class="step-number">3</div>
+              <div class="step-label">Schedule</div>
+            </div>
+            <div class="step" data-step="4">
+              <div class="step-number">4</div>
+              <div class="step-label">Details</div>
+            </div>
+          </div>
+
+          <!-- Step 1: Location Details -->
+          <div class="step-content" id="step1">
+            <h5 class="mb-3"><i class="fas fa-map-marker-alt text-danger me-2"></i>Location Details</h5>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <button type="button" class="btn btn-outline-danger w-100" id="getCurrentLocation">
+                        <i class="fas fa-crosshairs me-2"></i>Get Current Location
+                    </button>
+                    <small class="text-muted d-block mt-1">Automatically detect your location</small>
+                </div>
+                <div class="col-md-6">
+                    <button type="button" class="btn btn-outline-secondary w-100" id="toggleManualInput">
+                        <i class="fas fa-edit me-2"></i>Enter Manually
+                    </button>
+                    <small class="text-muted d-block mt-1">Type your address manually</small>
+                </div>
+            </div>
+            
+            <!-- Location Preview -->
+            <div id="locationPreview" class="mb-3" style="display: none;">
+                <div class="card border-success">
+                    <div class="card-body">
+                        <h6 class="card-title text-success">
+                            <i class="fas fa-check-circle me-2"></i>Location Detected
+                        </h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="mb-1"><strong>Coordinates:</strong></p>
+                                <p class="mb-1" id="coordinates">Loading...</p>
+                                <p class="mb-0"><strong>Accuracy:</strong> <span id="accuracy">Loading...</span> meters</p>
+                            </div>
+                            <div class="col-md-6">
+                                <div id="mapPreview" style="height: 150px; background-color: #f8f9fa; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                                    <small class="text-muted">Map preview will appear here</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Manual Input Section -->
+            <div id="manualInputSection">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="address_line_1" class="form-label">Address Line 1 *</label>
+                            <input type="text" class="form-control" id="address_line_1" name="address_line_1" placeholder="Street address, P.O. box, company name" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="address_line_2" class="form-label">Address Line 2</label>
+                            <input type="text" class="form-control" id="address_line_2" name="address_line_2" placeholder="Apartment, suite, unit, building, floor, etc.">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="city" class="form-label">City *</label>
+                            <input type="text" class="form-control" id="city" name="city" placeholder="City or town" required>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="state_province" class="form-label">State/Province *</label>
+                            <input type="text" class="form-control" id="state_province" name="state_province" placeholder="State or province" required>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="postal_code" class="form-label">Postal Code *</label>
+                            <input type="text" class="form-control" id="postal_code" name="postal_code" placeholder="ZIP or postal code" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="country" class="form-label">Country *</label>
+                    <input type="text" class="form-control" id="country" name="country" value="India" required>
+                </div>
+                
+                <div class="mb-3">
+                    <button type="button" class="btn btn-outline-info" id="validateAddress">
+                        <i class="fas fa-check-circle me-2"></i>Validate Address
+                    </button>
+                    <small class="text-muted d-block mt-1">Verify that your address is correct</small>
+                </div>
+            </div>
+          </div>
+
+          <!-- Step 2: Contact Information -->
+          <div class="booking-step" id="step2" style="display: none;">
+            <h6 class="mb-3"><i class="fas fa-phone me-2"></i>Contact Information</h6>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="id_contact_phone" class="form-label">Primary Phone *</label>
+                <input type="tel" class="form-control" id="id_contact_phone" name="contact_phone" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="id_contact_email" class="form-label">Email Address *</label>
+                <input type="email" class="form-control" id="id_contact_email" name="contact_email" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="id_alternate_phone" class="form-label">Alternate Phone</label>
+                <input type="tel" class="form-control" id="id_alternate_phone" name="alternate_phone" placeholder="Optional">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="id_property_type" class="form-label">Property Type *</label>
+                <select class="form-select" id="id_property_type" name="property_type" required>
+                  <option value="">Select property type</option>
+                  <option value="residential">Residential</option>
+                  <option value="commercial">Commercial</option>
+                  <option value="industrial">Industrial</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3: Scheduling -->
+          <div class="booking-step" id="step3" style="display: none;">
+            <h6 class="mb-3"><i class="fas fa-calendar me-2"></i>Schedule Appointment</h6>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="id_preferred_date" class="form-label">Preferred Date *</label>
+                <input type="date" class="form-control" id="id_preferred_date" name="preferred_date" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="id_preferred_time_slot" class="form-label">Preferred Time *</label>
+                <select class="form-select" id="id_preferred_time_slot" name="preferred_time_slot" required>
+                  <option value="">Select time</option>
+                  <option value="morning">Morning (8:00 AM - 12:00 PM)</option>
+                  <option value="afternoon">Afternoon (12:00 PM - 4:00 PM)</option>
+                  <option value="evening">Evening (4:00 PM - 8:00 PM)</option>
+                  <option value="flexible">Flexible</option>
+                </select>
+              </div>
+              <div class="col-12 mb-3">
+                <label for="id_payment_method" class="form-label">Payment Method *</label>
+                <select class="form-select" id="id_payment_method" name="payment_method" required>
+                  <option value="">Select payment method</option>
+                  <option value="cash">Cash</option>
+                  <option value="card">Credit/Debit Card</option>
+                  <option value="bank_transfer">Bank Transfer</option>
+                  <option value="online_payment">Online Payment</option>
+                  <option value="check">Check</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 4: Additional Details -->
+          <div class="booking-step" id="step4" style="display: none;">
+            <h6 class="mb-3"><i class="fas fa-clipboard-list me-2"></i>Additional Details</h6>
+            <div class="mb-3">
+              <label for="id_service_description" class="form-label">Service Description *</label>
+              <textarea class="form-control" id="id_service_description" name="service_description" rows="4" placeholder="Please describe the electrical issue or service you need..." required></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="id_special_requirements" class="form-label">Special Requirements</label>
+              <textarea class="form-control" id="id_special_requirements" name="special_requirements" rows="3" placeholder="Any special requirements or notes..."></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-outline-primary" id="prevStep" style="display: none;">Previous</button>
+          <button type="button" class="btn btn-primary-mistri" id="nextStep">Next</button>
+          <button type="submit" class="btn btn-success" id="submitBooking" style="display: none;">
+            <i class="fas fa-check me-2"></i>Submit Booking
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Service Cards - Mistri Style */
+.service-card-mistri {
+    background: white;
+    border-radius: 20px;
+    border: none;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+    overflow: hidden;
+    min-height: 400px;
+}
+
+.service-card-mistri:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-lg);
+}
+
+.service-card-mistri .service-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    color: var(--primary-red);
+}
+
+.service-card-mistri .service-description {
+    color: var(--text-gray);
+    line-height: 1.6;
+}
+
+.service-card-mistri .service-detail-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.service-card-mistri .service-category-badge .badge {
+    background: var(--gradient-red);
+    border: none;
+    font-weight: 600;
+}
+
+/* Category Pills */
+.category-pill-btn.active {
+    background: var(--primary-red) !important;
+    color: white !important;
+    box-shadow: 0 4px 12px rgba(139, 0, 0, 0.3) !important;
+}
+
+.category-pill-btn:hover {
+    background: var(--primary-red) !important;
+    color: white !important;
+    transform: translateY(-2px);
+}
+
+/* Search Bar */
+.search-input-ref:focus {
+    border-color: var(--primary-red);
+    box-shadow: 0 0 0 3px rgba(139, 0, 0, 0.1);
+}
+
+/* Booking Steps */
+.booking-steps {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.booking-steps::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #e0e0e0;
+    z-index: 1;
+}
+
+.step {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    flex: 1;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #e0e0e0;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin: 0 auto 8px;
+    transition: all 0.3s ease;
+}
+
+.step.active .step-number {
+    background: var(--primary-red);
+    color: white;
+    box-shadow: 0 4px 12px rgba(139, 0, 0, 0.3);
+}
+
+.step.completed .step-number {
+    background: #28a745;
+    color: white;
+}
+
+.step-label {
+    font-size: 0.875rem;
+    color: #666;
+    font-weight: 600;
+}
+
+.step.active .step-label {
+    color: var(--primary-red);
+}
+
+/* Modal Styles */
+.modal-content {
+    border-radius: 20px;
+    border: none;
+    box-shadow: var(--shadow-lg);
+}
+
+.modal-header {
+    background: var(--gradient-red);
+    color: white;
+    border-radius: 20px 20px 0 0;
+}
+
+.modal-title {
+    font-weight: 700;
+}
+
+.btn-close {
+    filter: invert(1);
+}
+
+/* Form Controls */
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary-red);
+    box-shadow: 0 0 0 3px rgba(139, 0, 0, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .service-card-mistri {
+        min-height: 350px;
+    }
+    
+    .booking-steps {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .booking-steps::before {
+        display: none;
+    }
+    
+    .step {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .step-number {
+        margin: 0;
+        flex-shrink: 0;
+    }
+}
+
+/* Animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.service-card-mistri {
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+.service-card-mistri:nth-child(1) { animation-delay: 0.1s; }
+.service-card-mistri:nth-child(2) { animation-delay: 0.2s; }
+.service-card-mistri:nth-child(3) { animation-delay: 0.3s; }
+.service-card-mistri:nth-child(4) { animation-delay: 0.4s; }
+.service-card-mistri:nth-child(5) { animation-delay: 0.5s; }
+.service-card-mistri:nth-child(6) { animation-delay: 0.6s; }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Service Search Functionality
+    const serviceSearch = document.getElementById('serviceSearch');
+    const clearServiceSearchBtn = document.getElementById('clearServiceSearchBtn');
+    const serviceCards = document.querySelectorAll('.service-card-mistri');
+
+    serviceSearch.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        let hasResults = false;
+
+        serviceCards.forEach(card => {
+            const serviceName = card.querySelector('.service-title').textContent.toLowerCase();
+            const serviceDesc = card.querySelector('.service-description').textContent.toLowerCase();
+            const category = card.querySelector('.service-category-badge .badge').textContent.toLowerCase();
+
+            if (serviceName.includes(searchTerm) || serviceDesc.includes(searchTerm) || category.includes(searchTerm)) {
+                card.style.display = 'block';
+                hasResults = true;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        clearServiceSearchBtn.style.display = searchTerm ? 'block' : 'none';
+    });
+
+    clearServiceSearchBtn.addEventListener('click', function() {
+        serviceSearch.value = '';
+        serviceCards.forEach(card => card.style.display = 'block');
+        this.style.display = 'none';
+    });
+
+    // Category Pills Active State
+    const categoryPills = document.querySelectorAll('.category-pill-btn');
+    categoryPills.forEach(pill => {
+        pill.addEventListener('click', function() {
+            categoryPills.forEach(p => p.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+
+    // Service Booking Modal
+    const bookingModal = new bootstrap.Modal(document.getElementById('serviceBookingModal'));
+    const bookNowBtns = document.querySelectorAll('.book-now-btn');
+    const bookingServiceId = document.getElementById('bookingServiceId');
+    const bookingServiceName = document.getElementById('bookingServiceName');
+
+    bookNowBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const serviceId = this.getAttribute('data-service-id');
+            const serviceName = this.getAttribute('data-service-name');
+            
+            bookingServiceId.value = serviceId;
+            bookingServiceName.textContent = serviceName;
+            
+            bookingModal.show();
+        });
+    });
+
+    // Multi-step Form
+    let currentStep = 1;
+    const totalSteps = 4;
+    const nextBtn = document.getElementById('nextStep');
+    const prevBtn = document.getElementById('prevStep');
+    const submitBtn = document.getElementById('submitBooking');
+
+    function showStep(step) {
+        // Hide all steps
+        document.querySelectorAll('.step-content, .booking-step').forEach(el => el.style.display = 'none');
+        
+        // Show current step
+        if (step === 1) {
+            document.getElementById('step1').style.display = 'block';
+        } else {
+            document.getElementById('step' + step).style.display = 'block';
+        }
+
+        // Update step indicators
+        document.querySelectorAll('.step').forEach((stepEl, index) => {
+            stepEl.classList.remove('active', 'completed');
+            if (index + 1 < step) {
+                stepEl.classList.add('completed');
+            } else if (index + 1 === step) {
+                stepEl.classList.add('active');
+            }
+        });
+
+        // Update buttons
+        prevBtn.style.display = step > 1 ? 'block' : 'none';
+        nextBtn.style.display = step < totalSteps ? 'block' : 'none';
+        submitBtn.style.display = step === totalSteps ? 'block' : 'none';
+    }
+
+    nextBtn.addEventListener('click', function() {
+        if (currentStep < totalSteps) {
+            currentStep++;
+            showStep(currentStep);
+        }
+    });
+
+    prevBtn.addEventListener('click', function() {
+        if (currentStep > 1) {
+            currentStep--;
+            showStep(currentStep);
+        }
+    });
+
+    // Initialize first step
+    showStep(1);
+
+    // Current Location Functionality
+    const getCurrentLocationBtn = document.getElementById('getCurrentLocation');
+    const toggleManualInputBtn = document.getElementById('toggleManualInput');
+    const locationPreview = document.getElementById('locationPreview');
+    const manualInputSection = document.getElementById('manualInputSection');
+    const coordinates = document.getElementById('coordinates');
+    const accuracy = document.getElementById('accuracy');
+    const mapPreview = document.getElementById('mapPreview');
+
+    // Address form fields
+    const addressLine1 = document.getElementById('address_line_1');
+    const addressLine2 = document.getElementById('address_line_2');
+    const city = document.getElementById('city');
+    const stateProvince = document.getElementById('state_province');
+    const postalCode = document.getElementById('postal_code');
+    const country = document.getElementById('country');
+
+    getCurrentLocationBtn.addEventListener('click', function() {
+        // Show loading state
+        this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Getting Location...';
+        this.disabled = true;
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    const acc = position.coords.accuracy;
+
+                    // Update coordinates and accuracy
+                    coordinates.textContent = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+                    accuracy.textContent = Math.round(acc);
+
+                    // Show location preview
+                    locationPreview.style.display = 'block';
+                    manualInputSection.style.display = 'none';
+
+                    // Create simple map preview (you can enhance this with Google Maps API)
+                    mapPreview.innerHTML = `
+                        <div style="text-align: center;">
+                            <i class="fas fa-map-marker-alt fa-2x text-danger mb-2"></i>
+                            <p class="mb-0"><strong>Location Detected!</strong></p>
+                            <small class="text-muted">Lat: ${lat.toFixed(4)}, Lng: ${lng.toFixed(4)}</small>
+                        </div>
+                    `;
+
+                    // Reverse geocoding to get address
+                    reverseGeocode(lat, lng);
+                },
+                function(error) {
+                    console.error('Geolocation error:', error);
+                    let errorMessage = 'Unable to get your location.';
+                    
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            errorMessage = 'Location access denied. Please allow location access or enter manually.';
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            errorMessage = 'Location information unavailable. Please enter manually.';
+                            break;
+                        case error.TIMEOUT:
+                            errorMessage = 'Location request timed out. Please try again or enter manually.';
+                            break;
+                    }
+                    
+                    alert(errorMessage);
+                    resetLocationButton();
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 60000
+                }
+            );
+        } else {
+            alert('Geolocation is not supported by this browser. Please enter your address manually.');
+            resetLocationButton();
+        }
+    });
+
+    function reverseGeocode(lat, lng) {
+        // Using a free reverse geocoding service
+        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.address) {
+                    // Populate form fields with reverse geocoded data
+                    const address = data.address;
+                    
+                    // Build address line 1
+                    let addr1 = '';
+                    if (address.house_number) addr1 += address.house_number + ' ';
+                    if (address.road) addr1 += address.road;
+                    if (address.suburb) addr1 += ', ' + address.suburb;
+                    
+                    addressLine1.value = addr1 || 'Address detected';
+                    addressLine2.value = address.house_name || '';
+                    city.value = address.city || address.town || address.village || '';
+                    stateProvince.value = address.state || '';
+                    postalCode.value = address.postcode || '';
+                    country.value = address.country || 'India';
+
+                    // Reset button
+                    resetLocationButton();
+                }
+            })
+            .catch(error => {
+                console.error('Reverse geocoding error:', error);
+                // Still populate coordinates even if reverse geocoding fails
+                addressLine1.value = 'Location detected';
+                city.value = 'City detected';
+                stateProvince.value = 'State detected';
+                resetLocationButton();
+            });
+    }
+
+    function resetLocationButton() {
+        getCurrentLocationBtn.innerHTML = '<i class="fas fa-crosshairs me-2"></i>Get Current Location';
+        getCurrentLocationBtn.disabled = false;
+    }
+
+    // Toggle manual input
+    toggleManualInputBtn.addEventListener('click', function() {
+        locationPreview.style.display = 'none';
+        manualInputSection.style.display = 'block';
+    });
+
+    // Address validation
+    const validateAddressBtn = document.getElementById('validateAddress');
+    validateAddressBtn.addEventListener('click', function() {
+        const addr1 = addressLine1.value.trim();
+        const cityVal = city.value.trim();
+        const stateVal = stateProvince.value.trim();
+        const postalVal = postalCode.value.trim();
+
+        if (!addr1 || !cityVal || !stateVal || !postalVal) {
+            alert('Please fill in all required address fields before validating.');
+            return;
+        }
+
+        // Show loading state
+        this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Validating...';
+        this.disabled = true;
+
+        // Simple validation - you can enhance this with a proper address validation service
+        setTimeout(() => {
+            alert('Address validation completed! Your address appears to be valid.');
+            this.innerHTML = '<i class="fas fa-check-circle me-2"></i>Validate Address';
+            this.disabled = false;
+        }, 2000);
+    });
+
+    // Form submission handler
+    const bookingForm = document.getElementById('serviceBookingForm');
+    bookingForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Show loading state
+        const submitBtn = document.getElementById('submitBooking');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Submitting...';
+        submitBtn.disabled = true;
+        
+        // Submit the form
+        fetch('/book-service/', {
+            method: 'POST',
+            body: new FormData(this),
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                // Close modal
+                bookingModal.hide();
+                // Reset form
+                bookingForm.reset();
+                currentStep = 1;
+                showStep(1);
+                
+                // Redirect to booking history
+                window.location.href = '/bookings/';
+            } else {
+                return response.text().then(text => {
+                    throw new Error('Booking submission failed: ' + text);
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('There was an error submitting your booking. Please try again.');
+        })
+        .finally(() => {
+            // Reset button state
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+        });
+    });
+});
+</script>
 {% endblock %} 

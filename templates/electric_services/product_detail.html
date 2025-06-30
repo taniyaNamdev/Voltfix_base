@@ -4,56 +4,52 @@
 {% block title %}{{ product.name }} - VoltFix{% endblock %}
 
 {% block content %}
-<!-- Page Header -->
-<section class="page-header-section bg-gradient">
+<!-- Product Detail Card Section -->
+<section class="section-padding" style="background: #fafbfc;">
     <div class="container-modern">
-        <div class="text-center fade-in">
-            <h1 class="heading-primary text-gradient">{{ product.name }}</h1>
-            <p class="text-lead" style="color: var(--text-secondary);">
-                {{ product.category.name }}
-            </p>
-        </div>
-    </div>
-</section>
-
-<!-- Product Detail Section -->
-<section class="section-padding">
-    <div class="container-modern">
-        <div class="row g-5">
-            <!-- Product Image -->
-            <div class="col-lg-6">
-                <div class="card-modern p-4">
-                    {% if product.image %}
-                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid rounded">
-                    {% else %}
-                        <div class="bg-light d-flex align-items-center justify-content-center rounded" style="height: 400px;">
-                            <i class="fas fa-bolt text-primary" style="font-size: 5rem;"></i>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-            
-            <!-- Product Info -->
-            <div class="col-lg-6">
-                <div class="d-flex flex-column h-100">
-                    <h2 class="heading-secondary">{{ product.name }}</h2>
-                    <p class="text-secondary">{{ product.description }}</p>
-
-                    <div class="d-flex align-items-center my-4">
-                        <h3 class="mb-0 text-primary me-3">${{ product.price }}</h3>
-                        <span class="badge bg-primary-light text-primary p-2">{{ product.get_condition_display }}</span>
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="product-detail-amazon card-modern d-flex flex-column flex-md-row align-items-stretch p-4" style="background: #fff; border-radius: 18px; box-shadow: 0 4px 24px rgba(178,34,34,0.08);">
+                    <!-- Product Image -->
+                    <div class="col-md-5 d-flex align-items-center justify-content-center mb-4 mb-md-0">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image" style="max-height: 320px; max-width: 100%; object-fit: contain; border-radius: 12px; background: #f8f8f8;">
+                        {% else %}
+                            <div class="product-placeholder d-flex align-items-center justify-content-center" style="height: 320px; width: 320px; background: #f5f5f5; border-radius: 12px;">
+                                <i class="fas fa-bolt text-primary" style="font-size: 4rem;"></i>
+                            </div>
+                        {% endif %}
                     </div>
-
-                    <form action="{% url 'add_to_cart' product.id %}" method="post" class="mt-auto">
-                        {% csrf_token %}
-                        <div class="d-flex align-items-center gap-3">
-                            <label for="quantity" class="form-label mb-0">Quantity:</label>
-                            <input type="number" name="quantity" id="quantity" value="1" min="1" class="form-control-modern" style="width: 100px;">
-                            <button type="submit" class="btn btn-primary-modern flex-grow-1">
-                                <i class="fas fa-cart-plus me-2"></i>Add to Cart
-                            </button>
+                    <!-- Product Info -->
+                    <div class="col-md-7 d-flex flex-column justify-content-center ps-md-5">
+                        <h2 class="fw-bold mb-2" style="font-size: 2rem;">{{ product.name }}</h2>
+                        <div class="d-flex align-items-center mb-2">
+                            {% for i in "12345" %}
+                                <i class="fas fa-star" style="color: #ffc107; font-size: 1.2rem;{% if forloop.counter > product.rating %} opacity: 0.3;{% endif %}"></i>
+                            {% endfor %}
+                            <span class="ms-2 text-muted" style="font-size: 1.1rem;">({{ product.reviews.count }} ratings)</span>
                         </div>
-                    </form>
+                        <div class="product-price mb-3" style="font-size: 2rem; color: #790d0d; font-weight: bold;">
+                            {% if product.discount_price %}
+                                ₹{{ product.discount_price|floatformat:0 }}
+                                <span class="text-muted text-decoration-line-through" style="font-size: 1.1rem; font-weight: 400;">₹{{ product.price|floatformat:0 }}</span>
+                            {% else %}
+                                ₹{{ product.price|floatformat:0 }}
+                            {% endif %}
+                        </div>
+                        <div class="mb-4" style="font-size: 1.08rem; color: #444;">
+                            {{ product.description }}
+                        </div>
+                        <form action="{% url 'add_to_cart' product.id %}" method="post" class="w-100">
+                            {% csrf_token %}
+                            <div class="d-flex align-items-center gap-3 mb-3">
+                                <label for="quantity" class="form-label mb-0">Quantity:</label>
+                                <input type="number" name="quantity" id="quantity" value="1" min="1" class="form-control-modern" style="width: 100px;">
+                            </div>
+                            <button type="submit" class="btn btn-ref-red w-100 mb-2" style="border-radius: 999px; font-weight: 700; font-size: 1.15rem; padding: 14px 0;">Add to Cart</button>
+                            <button type="button" class="btn btn-buy-now w-100" style="border-radius: 999px; font-weight: 700; font-size: 1.15rem; padding: 14px 0; background: #ffe082; color: #222; border: none;">Buy Now</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -95,7 +91,7 @@
         </div>
 
         <!-- Add Review Form -->
-        {% if user.is_authenticated %}
+        {% if user.is_authenticated and can_review %}
         <div class="card-modern mt-5">
             <h4 class="mb-4">Leave a Review</h4>
             <form method="post">
@@ -104,6 +100,8 @@
                 <button type="submit" class="btn btn-primary-modern">Submit Review</button>
             </form>
         </div>
+        {% elif user.is_authenticated %}
+        <div class="alert alert-warning mt-4">You can only review products you have purchased.</div>
         {% endif %}
     </div>
 </section>
