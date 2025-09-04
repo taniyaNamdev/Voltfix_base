@@ -5,10 +5,18 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.db.models import Q, Avg
 from django.core.paginator import Paginator
-from .models import UserProfile, ServiceCategory, ElectricProduct, ProductReview, ShoppingCart, CartItem, ProductCategory, ServiceBooking, ElectricService, QuoteRequest
+from .models import UserProfile, ServiceCategory, ElectricProduct, ProductReview, ShoppingCart, CartItem, ProductCategory, ServiceBooking, ElectricService, QuoteRequest, Payment, Order, OrderItem
 from .forms import CustomUserCreationForm, CustomAuthenticationForm, UserUpdateForm, ProfileUpdateForm, ProductSearchForm, ProductReviewForm, QuoteRequestForm, ServiceBookingForm
 from django.views.decorators.http import require_POST
 from decimal import Decimal
+import razorpay
+from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+import json
+from django.utils import timezone
+
+# Initialize Razorpay client
+razorpay_client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
 def welcome(request):
     """Welcome page with modern electrifying design"""
@@ -84,7 +92,7 @@ def profile(request):
         profile_form = ProfileUpdateForm(instance=user_profile, user=request.user)
     
     # Get recent bookings for the user
-    recent_bookings = ServiceBooking.objects.filter(user=request.user).order_by('-booked_at')[:4]
+    recent_bookings = ServiceBooking.objects.filter(user=request.user).order_by('-created_at')[:4]
     
     # Get booking statistics
     total_bookings = ServiceBooking.objects.filter(user=request.user).count()
@@ -388,10 +396,26 @@ def book_service(request):
         
         booking.save()
         
+        # Check if this is an AJAX request (for payment integration)
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({
+                'success': True,
+                'message': f'Your booking for {service.name} has been submitted successfully!',
+                'booking_id': booking.id,
+                'estimated_cost': float(booking.estimated_cost)
+            })
+        
         messages.success(request, f'Your booking for {service.name} has been submitted successfully! We will contact you within 24 hours to confirm your appointment.')
         return redirect('booking_history')
     else:
-        # If form is invalid, we'll handle this in the template
+        # Check if this is an AJAX request
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({
+                'success': False,
+                'message': 'Please correct the errors below and try again.',
+                'errors': form.errors
+            }, status=400)
+        
         messages.error(request, 'Please correct the errors below and try again.')
         return redirect('services_overview')
 
@@ -410,7 +434,7 @@ def submit_quote_request(request):
 @login_required
 def user_booking_history(request):
     """User's booking history page"""
-    bookings = ServiceBooking.objects.filter(user=request.user).order_by('-booked_at')
+    bookings = ServiceBooking.objects.filter(user=request.user).order_by('-created_at')
     
     # Filter by status if provided
     status_filter = request.GET.get('status')
@@ -426,3 +450,213 @@ def user_booking_history(request):
         'completed_bookings': bookings.filter(status='completed').count(),
     }
     return render(request, 'electric_services/booking_history.html', context)
+
+@login_required
+def create_payment_order(request):
+    """Create Razorpay order for product checkout"""
+    if request.method == 'POST':
+        try:
+            cart, created = ShoppingCart.objects.get_or_create(user=request.user)
+            
+            if not cart.items.exists():
+                return JsonResponse({'error': 'Cart is empty'}, status=400)
+            
+            # Calculate total with GST
+            subtotal = cart.total_price
+            total_gst = Decimal('0.00')
+            
+            for item in cart.items.all():
+                gst_rate = item.product.category.gst_rate
+                item_gst = (item.total_price * Decimal(str(gst_rate))) / Decimal('100')
+                total_gst += item_gst
+            
+            final_amount = subtotal + total_gst
+            
+            # Create Razorpay order
+            order_data = {
+                'amount': int(final_amount * 100),  # Convert to paise
+                'currency': 'INR',
+                'receipt': f'order_{request.user.id}_{int(timezone.now().timestamp())}',
+                'notes': {
+                    'user_id': str(request.user.id),
+                    'payment_type': 'product'
+                }
+            }
+            
+            razorpay_order = razorpay_client.order.create(data=order_data)
+            
+            # Create Payment record
+            payment = Payment.objects.create(
+                user=request.user,
+                payment_type='product',
+                razorpay_order_id=razorpay_order['id'],
+                amount=final_amount,
+                currency='INR',
+                status='pending'
+            )
+            
+            return JsonResponse({
+                'order_id': razorpay_order['id'],
+                'amount': razorpay_order['amount'],
+                'currency': razorpay_order['currency'],
+                'payment_id': payment.id
+            })
+            
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+@login_required
+def create_service_payment_order(request):
+    """Create Razorpay order for service booking"""
+    if request.method == 'POST':
+        try:
+            service_id = request.POST.get('service_id')
+            booking_id = request.POST.get('booking_id')
+            
+            if not service_id or not booking_id:
+                return JsonResponse({'error': 'Service ID and Booking ID are required'}, status=400)
+            
+            service = get_object_or_404(ElectricService, id=service_id, is_active=True)
+            booking = get_object_or_404(ServiceBooking, id=booking_id, user=request.user)
+            
+            # Calculate amount with 18% GST
+            service_price = service.price
+            gst_amount = (service_price * Decimal('18')) / Decimal('100')
+            final_amount = service_price + gst_amount
+            
+            # Create Razorpay order
+            order_data = {
+                'amount': int(final_amount * 100),  # Convert to paise
+                'currency': 'INR',
+                'receipt': f'service_{booking.id}_{int(timezone.now().timestamp())}',
+                'notes': {
+                    'user_id': str(request.user.id),
+                    'booking_id': str(booking.id),
+                    'payment_type': 'service'
+                }
+            }
+            
+            razorpay_order = razorpay_client.order.create(data=order_data)
+            
+            # Create Payment record
+            payment = Payment.objects.create(
+                user=request.user,
+                payment_type='service',
+                razorpay_order_id=razorpay_order['id'],
+                amount=final_amount,
+                currency='INR',
+                status='pending'
+            )
+            
+            # Update booking with payment reference
+            booking.payment = payment
+            booking.estimated_cost = final_amount
+            booking.save()
+            
+            return JsonResponse({
+                'order_id': razorpay_order['id'],
+                'amount': razorpay_order['amount'],
+                'currency': razorpay_order['currency'],
+                'payment_id': payment.id
+            })
+            
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+@csrf_exempt
+def payment_callback(request):
+    """Handle Razorpay payment callback"""
+    if request.method == 'POST':
+        try:
+            # Verify payment signature
+            payment_data = json.loads(request.body)
+            signature = request.headers.get('X-Razorpay-Signature')
+            
+            # Verify signature (you should implement proper signature verification)
+            # razorpay_client.utility.verify_webhook_signature(request.body, signature, settings.RAZORPAY_WEBHOOK_SECRET)
+            
+            payment_id = payment_data.get('payload', {}).get('payment', {}).get('entity', {}).get('id')
+            order_id = payment_data.get('payload', {}).get('payment', {}).get('entity', {}).get('order_id')
+            
+            if payment_id and order_id:
+                # Update payment status
+                payment = Payment.objects.get(razorpay_order_id=order_id)
+                payment.razorpay_payment_id = payment_id
+                payment.status = 'completed'
+                payment.save()
+                
+                # Handle based on payment type
+                if payment.payment_type == 'product':
+                    # Create order
+                    cart = ShoppingCart.objects.get(user=payment.user)
+                    
+                    # Create order
+                    order = Order.objects.create(
+                        user=payment.user,
+                        payment=payment,
+                        total_amount=payment.amount,
+                        gst_amount=payment.amount - cart.total_price,  # Approximate GST
+                        shipping_address=request.POST.get('shipping_address', ''),
+                        phone_number=request.POST.get('phone_number', ''),
+                        status='confirmed'
+                    )
+                    
+                    # Create order items
+                    for item in cart.items.all():
+                        gst_rate = item.product.category.gst_rate
+                        item_gst = (item.total_price * Decimal(str(gst_rate))) / Decimal('100')
+                        
+                        OrderItem.objects.create(
+                            order=order,
+                            product=item.product,
+                            quantity=item.quantity,
+                            price=item.product.price,
+                            gst_rate=gst_rate,
+                            gst_amount=item_gst
+                        )
+                    
+                    # Clear cart
+                    cart.items.all().delete()
+                    
+                elif payment.payment_type == 'service':
+                    # Update service booking
+                    booking = ServiceBooking.objects.get(payment=payment)
+                    booking.payment_status = 'paid'
+                    booking.status = 'confirmed'
+                    booking.save()
+                
+                return JsonResponse({'status': 'success'})
+            
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    
+    return JsonResponse({'error': 'Invalid request'}, status=400)
+
+@login_required
+def payment_success(request):
+    """Handle successful payment"""
+    payment_id = request.GET.get('payment_id')
+    if payment_id:
+        try:
+            payment = Payment.objects.get(id=payment_id, user=request.user)
+            if payment.payment_type == 'product':
+                messages.success(request, 'Payment successful! Your order has been placed.')
+                return redirect('order_confirmation', order_id=payment.order.id)
+            elif payment.payment_type == 'service':
+                messages.success(request, 'Payment successful! Your service booking has been confirmed.')
+                return redirect('booking_history')
+        except Payment.DoesNotExist:
+            pass
+    
+    messages.error(request, 'Payment verification failed.')
+    return redirect('cart')
+
+@login_required
+def payment_failure(request):
+    """Handle failed payment"""
+    messages.error(request, 'Payment failed. Please try again.')
+    return redirect('cart')

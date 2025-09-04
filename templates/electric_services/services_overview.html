@@ -163,48 +163,28 @@
           </div>
 
           <!-- Step 1: Location Details -->
-          <div class="step-content" id="step1">
-            <h5 class="mb-3"><i class="fas fa-map-marker-alt text-danger me-2"></i>Location Details</h5>
+          <div class="booking-step" id="step1">
+            <h6 class="mb-3"><i class="fas fa-map-marker-alt me-2"></i>Service Location</h6>
             
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <button type="button" class="btn btn-outline-danger w-100" id="getCurrentLocation">
-                        <i class="fas fa-crosshairs me-2"></i>Get Current Location
-                    </button>
-                    <small class="text-muted d-block mt-1">Automatically detect your location</small>
-                </div>
-                <div class="col-md-6">
-                    <button type="button" class="btn btn-outline-secondary w-100" id="toggleManualInput">
-                        <i class="fas fa-edit me-2"></i>Enter Manually
-                    </button>
-                    <small class="text-muted d-block mt-1">Type your address manually</small>
-                </div>
+            <!-- Current Location Section -->
+            <div class="mb-4">
+              <button type="button" class="btn btn-outline-primary mb-2" id="getCurrentLocation">
+                <i class="fas fa-crosshairs me-2"></i>Get Current Location
+              </button>
+              <button type="button" class="btn btn-outline-secondary ms-2" id="toggleManualInput">
+                <i class="fas fa-edit me-2"></i>Enter Manually
+              </button>
             </div>
-            
+
             <!-- Location Preview -->
-            <div id="locationPreview" class="mb-3" style="display: none;">
-                <div class="card border-success">
-                    <div class="card-body">
-                        <h6 class="card-title text-success">
-                            <i class="fas fa-check-circle me-2"></i>Location Detected
-                        </h6>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <p class="mb-1"><strong>Coordinates:</strong></p>
-                                <p class="mb-1" id="coordinates">Loading...</p>
-                                <p class="mb-0"><strong>Accuracy:</strong> <span id="accuracy">Loading...</span> meters</p>
-                            </div>
-                            <div class="col-md-6">
-                                <div id="mapPreview" style="height: 150px; background-color: #f8f9fa; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-                                    <small class="text-muted">Map preview will appear here</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div id="locationPreview" class="alert alert-success" style="display: none;">
+              <h6><i class="fas fa-check-circle me-2"></i>Location Detected</h6>
+              <div id="coordinates" class="mb-2"></div>
+              <div id="accuracy" class="mb-2"></div>
+              <div id="mapPreview" class="mb-2"></div>
             </div>
-            
-            <!-- Manual Input Section -->
+
+            <!-- Manual Address Input -->
             <div id="manualInputSection">
                 <div class="row">
                     <div class="col-md-6">
@@ -261,20 +241,20 @@
             <h6 class="mb-3"><i class="fas fa-phone me-2"></i>Contact Information</h6>
             <div class="row">
               <div class="col-md-6 mb-3">
-                <label for="id_contact_phone" class="form-label">Primary Phone *</label>
-                <input type="tel" class="form-control" id="id_contact_phone" name="contact_phone" required>
+                <label for="contact_phone" class="form-label">Primary Phone *</label>
+                <input type="tel" class="form-control" id="contact_phone" name="contact_phone" required>
               </div>
               <div class="col-md-6 mb-3">
-                <label for="id_contact_email" class="form-label">Email Address *</label>
-                <input type="email" class="form-control" id="id_contact_email" name="contact_email" required>
+                <label for="contact_email" class="form-label">Email Address *</label>
+                <input type="email" class="form-control" id="contact_email" name="contact_email" required>
               </div>
               <div class="col-md-6 mb-3">
-                <label for="id_alternate_phone" class="form-label">Alternate Phone</label>
-                <input type="tel" class="form-control" id="id_alternate_phone" name="alternate_phone" placeholder="Optional">
+                <label for="alternate_phone" class="form-label">Alternate Phone</label>
+                <input type="tel" class="form-control" id="alternate_phone" name="alternate_phone" placeholder="Optional">
               </div>
               <div class="col-md-6 mb-3">
-                <label for="id_property_type" class="form-label">Property Type *</label>
-                <select class="form-select" id="id_property_type" name="property_type" required>
+                <label for="property_type" class="form-label">Property Type *</label>
+                <select class="form-select" id="property_type" name="property_type" required>
                   <option value="">Select property type</option>
                   <option value="residential">Residential</option>
                   <option value="commercial">Commercial</option>
@@ -290,22 +270,26 @@
             <h6 class="mb-3"><i class="fas fa-calendar me-2"></i>Schedule Appointment</h6>
             <div class="row">
               <div class="col-md-6 mb-3">
-                <label for="id_preferred_date" class="form-label">Preferred Date *</label>
-                <input type="date" class="form-control" id="id_preferred_date" name="preferred_date" required>
+                <label for="preferred_date" class="form-label">Preferred Date *</label>
+                <input type="date" class="form-control" id="preferred_date" name="preferred_date" required>
               </div>
               <div class="col-md-6 mb-3">
-                <label for="id_preferred_time_slot" class="form-label">Preferred Time *</label>
-                <select class="form-select" id="id_preferred_time_slot" name="preferred_time_slot" required>
-                  <option value="">Select time</option>
+                <label for="preferred_time" class="form-label">Preferred Time *</label>
+                <input type="time" class="form-control" id="preferred_time" name="preferred_time" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="preferred_time_slot" class="form-label">Time Slot *</label>
+                <select class="form-select" id="preferred_time_slot" name="preferred_time_slot" required>
+                  <option value="">Select time slot</option>
                   <option value="morning">Morning (8:00 AM - 12:00 PM)</option>
                   <option value="afternoon">Afternoon (12:00 PM - 4:00 PM)</option>
                   <option value="evening">Evening (4:00 PM - 8:00 PM)</option>
                   <option value="flexible">Flexible</option>
                 </select>
               </div>
-              <div class="col-12 mb-3">
-                <label for="id_payment_method" class="form-label">Payment Method *</label>
-                <select class="form-select" id="id_payment_method" name="payment_method" required>
+              <div class="col-md-6 mb-3">
+                <label for="payment_method" class="form-label">Payment Method *</label>
+                <select class="form-select" id="payment_method" name="payment_method" required>
                   <option value="">Select payment method</option>
                   <option value="cash">Cash</option>
                   <option value="card">Credit/Debit Card</option>
@@ -321,12 +305,12 @@
           <div class="booking-step" id="step4" style="display: none;">
             <h6 class="mb-3"><i class="fas fa-clipboard-list me-2"></i>Additional Details</h6>
             <div class="mb-3">
-              <label for="id_service_description" class="form-label">Service Description *</label>
-              <textarea class="form-control" id="id_service_description" name="service_description" rows="4" placeholder="Please describe the electrical issue or service you need..." required></textarea>
+              <label for="service_description" class="form-label">Service Description *</label>
+              <textarea class="form-control" id="service_description" name="service_description" rows="4" placeholder="Please describe the electrical issue or service you need..." required></textarea>
             </div>
             <div class="mb-3">
-              <label for="id_special_requirements" class="form-label">Special Requirements</label>
-              <textarea class="form-control" id="id_special_requirements" name="special_requirements" rows="3" placeholder="Any special requirements or notes..."></textarea>
+              <label for="special_requirements" class="form-label">Special Requirements</label>
+              <textarea class="form-control" id="special_requirements" name="special_requirements" rows="3" placeholder="Any special requirements or notes..."></textarea>
             </div>
           </div>
         </div>
@@ -336,6 +320,9 @@
           <button type="button" class="btn btn-primary-mistri" id="nextStep">Next</button>
           <button type="submit" class="btn btn-success" id="submitBooking" style="display: none;">
             <i class="fas fa-check me-2"></i>Submit Booking
+          </button>
+          <button type="button" class="btn btn-warning" id="service-payment-btn" style="display: none;">
+            <i class="fas fa-credit-card me-2"></i>Pay Now
           </button>
         </div>
       </form>
@@ -634,6 +621,12 @@ document.addEventListener('DOMContentLoaded', function() {
         prevBtn.style.display = step > 1 ? 'block' : 'none';
         nextBtn.style.display = step < totalSteps ? 'block' : 'none';
         submitBtn.style.display = step === totalSteps ? 'block' : 'none';
+        
+        // Show payment button on last step
+        const paymentBtn = document.getElementById('service-payment-btn');
+        if (paymentBtn) {
+            paymentBtn.style.display = step === totalSteps ? 'block' : 'none';
+        }
     }
 
     nextBtn.addEventListener('click', function() {
@@ -652,6 +645,35 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize first step
     showStep(1);
+
+    // Set default time based on time slot selection
+    const preferredTimeSlot = document.getElementById('preferred_time_slot');
+    const preferredTime = document.getElementById('preferred_time');
+    
+    preferredTimeSlot.addEventListener('change', function() {
+        const selectedSlot = this.value;
+        let defaultTime = '09:00'; // Default to 9 AM
+        
+        switch(selectedSlot) {
+            case 'morning':
+                defaultTime = '09:00';
+                break;
+            case 'afternoon':
+                defaultTime = '14:00';
+                break;
+            case 'evening':
+                defaultTime = '17:00';
+                break;
+            case 'flexible':
+                defaultTime = '10:00';
+                break;
+        }
+        
+        preferredTime.value = defaultTime;
+    });
+
+    // Set initial time value
+    preferredTime.value = '09:00';
 
     // Current Location Functionality
     const getCurrentLocationBtn = document.getElementById('getCurrentLocation');
@@ -822,10 +844,15 @@ document.addEventListener('DOMContentLoaded', function() {
             body: new FormData(this),
             headers: {
                 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                'X-Requested-With': 'XMLHttpRequest'
             }
         })
-        .then(response => {
-            if (response.ok) {
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Show success message
+                alert(data.message);
+                
                 // Close modal
                 bookingModal.hide();
                 // Reset form
@@ -836,9 +863,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Redirect to booking history
                 window.location.href = '/bookings/';
             } else {
-                return response.text().then(text => {
-                    throw new Error('Booking submission failed: ' + text);
-                });
+                alert('Error: ' + data.message);
             }
         })
         .catch(error => {
@@ -853,4 +878,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+
+<!-- Include Razorpay Integration -->
+<script src="{% static 'js/razorpay-integration.js' %}"></script>
 {% endblock %} 

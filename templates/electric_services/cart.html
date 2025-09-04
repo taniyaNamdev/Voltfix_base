@@ -1,7 +1,8 @@
 {% extends 'electric_services/base.html' %}
 {% load static %}
 
-{% block title %}Shopping Cart - VoltFix{% endblock %}
+{% block title %}Shopping Cart - VoltFix<script src="{% static "js/razorpay-integration.js" %}"></script>
+{% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
@@ -55,7 +56,7 @@
                                 <div class="cart-item p-4 border-bottom" data-item-id="{{ item.id }}">
                                     <div class="row align-items-center">
                                         <div class="col-md-2 col-4">
-                                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" 
+                                            <img src="{% if item.product.image %}{{ item.product.image.url }}{% else %}{% static "images/logo.jpeg" %}{% endif %}" alt="{{ item.product.name }}" 
                                                  class="img-fluid rounded-3" style="max-height: 80px; object-fit: cover;">
                                         </div>
                                         <div class="col-md-4 col-8">
@@ -348,4 +349,5 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+<script src="{% static "js/razorpay-integration.js" %}"></script>
 {% endblock %}

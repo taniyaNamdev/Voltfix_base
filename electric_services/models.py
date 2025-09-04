@@ -170,13 +170,65 @@ class CartItem(models.Model):
     def total_price(self):
         return self.product.price * self.quantity
 
+class Payment(models.Model):
+    """Model to track all payments"""
+    PAYMENT_STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('completed', 'Completed'),
+        ('failed', 'Failed'),
+        ('refunded', 'Refunded'),
+    ]
+    
+    PAYMENT_TYPE_CHOICES = [
+        ('product', 'Product Purchase'),
+        ('service', 'Service Booking'),
+    ]
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    payment_type = models.CharField(max_length=10, choices=PAYMENT_TYPE_CHOICES)
+    razorpay_order_id = models.CharField(max_length=255, unique=True)
+    razorpay_payment_id = models.CharField(max_length=255, blank=True, null=True)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    currency = models.CharField(max_length=3, default='INR')
+    status = models.CharField(max_length=10, choices=PAYMENT_STATUS_CHOICES, default='pending')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.payment_type} - {self.razorpay_order_id} - {self.status}"
+
 class ServiceBooking(models.Model):
+    """Model for booking electrical services"""
     STATUS_CHOICES = [
         ('pending', 'Pending'),
         ('confirmed', 'Confirmed'),
         ('in_progress', 'In Progress'),
         ('completed', 'Completed'),
         ('cancelled', 'Cancelled'),
+    ]
+    
+    PAYMENT_STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('paid', 'Paid'),
+        ('failed', 'Failed'),
+        ('refunded', 'Refunded'),
+    ]
+    
+    PROPERTY_TYPE_CHOICES = [
+        ('residential', 'Residential'),
+        ('commercial', 'Commercial'),
+        ('industrial', 'Industrial'),
+        ('other', 'Other'),
+    ]
+    
+    PREFERRED_TIME_SLOT_CHOICES = [
+        ('morning', 'Morning (8:00 AM - 12:00 PM)'),
+        ('afternoon', 'Afternoon (12:00 PM - 4:00 PM)'),
+        ('evening', 'Evening (4:00 PM - 8:00 PM)'),
+        ('flexible', 'Flexible'),
     ]
     
     PAYMENT_METHOD_CHOICES = [
@@ -187,145 +239,74 @@ class ServiceBooking(models.Model):
         ('check', 'Check'),
     ]
     
-    PRIORITY_CHOICES = [
-        ('low', 'Low Priority'),
-        ('normal', 'Normal Priority'),
-        ('high', 'High Priority'),
-        ('emergency', 'Emergency'),
-    ]
-    
     # Basic booking info
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     service = models.ForeignKey(ElectricService, on_delete=models.CASCADE)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
-    priority = models.CharField(max_length=20, choices=PRIORITY_CHOICES, default='normal')
     
-    # Location details
-    address_line_1 = models.CharField(max_length=255, default='Jaipur')
+    # Address fields
+    address_line_1 = models.CharField(max_length=255, blank=True, null=True)
     address_line_2 = models.CharField(max_length=255, blank=True, null=True)
-    city = models.CharField(max_length=100, default='Jaipur')
-    state_province = models.CharField(max_length=100, default='Rajasthan')
-    postal_code = models.CharField(max_length=20, default = '302001')
+    city = models.CharField(max_length=100, blank=True, null=True)
+    state_province = models.CharField(max_length=100, blank=True, null=True)
+    postal_code = models.CharField(max_length=20, blank=True, null=True)
     country = models.CharField(max_length=100, default='India')
     
     # Contact information
-    contact_phone = models.CharField(max_length=20, default = '9829000000')
-    contact_email = models.EmailField(default = 'test@test.com')
-    alternate_phone = models.CharField(max_length=20, blank=True, null=True)
+    contact_phone = models.CharField(max_length=15, blank=True, null=True)
+    contact_email = models.EmailField(blank=True, null=True)
+    alternate_phone = models.CharField(max_length=15, blank=True, null=True)
+    property_type = models.CharField(max_length=20, choices=PROPERTY_TYPE_CHOICES, blank=True, null=True)
     
     # Scheduling
-    preferred_date = models.DateField(default = timezone.now())
-    preferred_time_slot = models.CharField(max_length=50, choices=[
-        ('morning', 'Morning (8 AM - 12 PM)'),
-        ('afternoon', 'Afternoon (12 PM - 4 PM)'),
-        ('evening', 'Evening (4 PM - 8 PM)'),
-        ('flexible', 'Flexible'),
-    ], default = 'flexible')
-    
-    # Pricing and payment
-    estimated_cost = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    final_cost = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    payment_method = models.CharField(max_length=20, choices=PAYMENT_METHOD_CHOICES, default='card')
-    payment_status = models.CharField(max_length=20, choices=[
-        ('pending', 'Pending'),
-        ('partial', 'Partial Payment'),
-        ('paid', 'Paid'),
-        ('refunded', 'Refunded'),
-    ], default='pending')
+    preferred_date = models.DateField(default=timezone.now)
+    preferred_time = models.TimeField(default=timezone.now)
+    preferred_time_slot = models.CharField(max_length=20, choices=PREFERRED_TIME_SLOT_CHOICES, blank=True, null=True)
+    payment_method = models.CharField(max_length=20, choices=PAYMENT_METHOD_CHOICES, blank=True, null=True)
     
     # Service details
-    service_description = models.TextField(help_text="Detailed description of the service needed", default = 'test')
-    special_requirements = models.TextField(blank=True, null=True, help_text="Any special requirements or notes")
-    property_type = models.CharField(max_length=50, choices=[
-        ('residential', 'Residential'),
-        ('commercial', 'Commercial'),
-        ('industrial', 'Industrial'),
-        ('other', 'Other'),
-    ], default='residential')
+    service_description = models.TextField(blank=True, null=True)
+    special_requirements = models.TextField(blank=True, null=True)
+    
+    # Legacy fields (keeping for backward compatibility)
+    address = models.TextField(default='')
+    phone_number = models.CharField(max_length=15, default='')
+    description = models.TextField(blank=True, default='')
+    
+    # Pricing and status
+    estimated_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    final_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    payment_status = models.CharField(max_length=10, choices=PAYMENT_STATUS_CHOICES, default='pending')
+    payment = models.OneToOneField(Payment, on_delete=models.SET_NULL, null=True, blank=True)
     
     # Timestamps
-    booked_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    scheduled_date = models.DateTimeField(blank=True, null=True)
-    completed_date = models.DateTimeField(blank=True, null=True)
-    
-    # Admin fields
-    admin_notes = models.TextField(blank=True, null=True)
-    assigned_technician = models.ForeignKey(
-        settings.AUTH_USER_MODEL, 
-        on_delete=models.SET_NULL, 
-        blank=True, 
-        null=True, 
-        related_name='assigned_bookings'
-    )
-    
-    def __str__(self):
-        return f"{self.user.username} - {self.service.name} ({self.status}) - {self.preferred_date}"
     
     class Meta:
-        ordering = ['-booked_at']
-        verbose_name = "Service Booking"
-        verbose_name_plural = "Service Bookings"
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"{self.user.username} - {self.service.name} - {self.status}"
     
     @property
     def full_address(self):
-        address_parts = [self.address_line_1]
+        """Returns the complete formatted address"""
+        address_parts = []
+        if self.address_line_1:
+            address_parts.append(self.address_line_1)
         if self.address_line_2:
             address_parts.append(self.address_line_2)
-        address_parts.extend([self.city, self.state_province, self.postal_code, self.country])
-        return ', '.join(address_parts)
-    
-    @property
-    def is_emergency(self):
-        return self.priority == 'emergency'
-    
-    @property
-    def is_overdue(self):
-        if self.scheduled_date and self.status in ['confirmed', 'in_progress']:
-            return self.scheduled_date < timezone.now()
-        return False
-
-    def get_status_color(self):
-        """Return Bootstrap color class for status"""
-        status_colors = {
-            'pending': 'warning',
-            'confirmed': 'info',
-            'in_progress': 'primary',
-            'completed': 'success',
-            'cancelled': 'danger',
-        }
-        return status_colors.get(self.status, 'secondary')
-
-    def get_status_display(self):
-        """Return human-readable status"""
-        status_display = {
-            'pending': 'Pending',
-            'confirmed': 'Confirmed',
-            'in_progress': 'In Progress',
-            'completed': 'Completed',
-            'cancelled': 'Cancelled',
-        }
-        return status_display.get(self.status, self.status.title())
-
-    def get_preferred_time_slot_display(self):
-        """Return human-readable time slot"""
-        time_slot_display = {
-            'morning': 'Morning (8 AM - 12 PM)',
-            'afternoon': 'Afternoon (12 PM - 4 PM)',
-            'evening': 'Evening (4 PM - 8 PM)',
-            'flexible': 'Flexible',
-        }
-        return time_slot_display.get(self.preferred_time_slot, self.preferred_time_slot.title())
-
-    def get_payment_status_display(self):
-        """Return human-readable payment status"""
-        payment_status_display = {
-            'pending': 'Pending',
-            'partial': 'Partial Payment',
-            'paid': 'Paid',
-            'refunded': 'Refunded',
-        }
-        return payment_status_display.get(self.payment_status, self.payment_status.title())
+        if self.city:
+            address_parts.append(self.city)
+        if self.state_province:
+            address_parts.append(self.state_province)
+        if self.postal_code:
+            address_parts.append(self.postal_code)
+        if self.country:
+            address_parts.append(self.country)
+        
+        return ', '.join(address_parts) if address_parts else self.address
 
 class QuoteRequest(models.Model):
     STATUS_CHOICES = [
@@ -371,3 +352,58 @@ class QuoteRequest(models.Model):
         ordering = ['-created_at']
         verbose_name = "Quote Request"
         verbose_name_plural = "Quote Requests"
+
+class Order(models.Model):
+    """Model to track product orders"""
+    ORDER_STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('confirmed', 'Confirmed'),
+        ('processing', 'Processing'),
+        ('shipped', 'Shipped'),
+        ('delivered', 'Delivered'),
+        ('cancelled', 'Cancelled'),
+    ]
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    payment = models.OneToOneField(Payment, on_delete=models.CASCADE)
+    order_number = models.CharField(max_length=20, unique=True, default='')
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    gst_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    shipping_address = models.TextField(default='')
+    phone_number = models.CharField(max_length=15, default='')
+    status = models.CharField(max_length=10, choices=ORDER_STATUS_CHOICES, default='pending')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"Order {self.order_number} - {self.user.username}"
+    
+    def save(self, *args, **kwargs):
+        if not self.order_number:
+            # Generate order number: ORD + timestamp + random 4 digits
+            import random
+            from django.utils import timezone
+            timestamp = timezone.now().strftime('%Y%m%d%H%M%S')
+            random_digits = str(random.randint(1000, 9999))
+            self.order_number = f"ORD{timestamp}{random_digits}"
+        super().save(*args, **kwargs)
+
+
+class OrderItem(models.Model):
+    """Model to track individual items in an order"""
+    order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
+    product = models.ForeignKey(ElectricProduct, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    gst_rate = models.IntegerField(default=18)
+    gst_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    
+    def __str__(self):
+        return f"{self.product.name} x {self.quantity} - Order {self.order.order_number}"
+    
+    @property
+    def total_price(self):
+        return self.price * self.quantity + self.gst_amount

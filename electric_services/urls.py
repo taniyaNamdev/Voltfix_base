@@ -38,4 +38,11 @@ urlpatterns = [
     # New URL patterns for About Us and Contact Us pages
     path('about/', views.about_us, name='about_us'),
     path('contact/', views.contact_us, name='contact_us'),
+
+    # Payment URLs
+    path('create-payment-order/', views.create_payment_order, name='create_payment_order'),
+    path('create-service-payment-order/', views.create_service_payment_order, name='create_service_payment_order'),
+    path('payment-callback/', views.payment_callback, name='payment_callback'),
+    path('payment-success/', views.payment_success, name='payment_success'),
+    path('payment-failure/', views.payment_failure, name='payment_failure'),
 ] 

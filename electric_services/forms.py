@@ -205,139 +205,93 @@ class ServiceBookingForm(forms.ModelForm):
     class Meta:
         model = ServiceBooking
         fields = [
-            'address_line_1', 'address_line_2', 'city', 'state_province', 'postal_code', 'country',
-            'contact_phone', 'contact_email', 'alternate_phone',
-            'preferred_date', 'preferred_time_slot', 'property_type',
-            'service_description', 'special_requirements', 'payment_method'
+            'preferred_date', 'preferred_time', 'preferred_time_slot',
+            'address_line_1', 'address_line_2', 'city', 'state_province', 
+            'postal_code', 'country', 'contact_phone', 'contact_email', 
+            'alternate_phone', 'property_type', 'payment_method',
+            'service_description', 'special_requirements'
         ]
         widgets = {
-            'address_line_1': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Street Address'
-            }),
-            'address_line_2': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Apartment, suite, etc. (optional)'
-            }),
-            'city': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'City'
-            }),
-            'state_province': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'State/Province'
-            }),
-            'postal_code': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'ZIP/Postal Code'
-            }),
-            'country': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Country'
-            }),
-            'contact_phone': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Primary Phone Number'
-            }),
-            'contact_email': forms.EmailInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Email Address'
-            }),
-            'alternate_phone': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Alternate Phone (optional)'
-            }),
             'preferred_date': forms.DateInput(attrs={
                 'class': 'form-control',
                 'type': 'date',
                 'min': date.today().isoformat()
             }),
+            'preferred_time': forms.TimeInput(attrs={
+                'class': 'form-control',
+                'type': 'time',
+            }),
             'preferred_time_slot': forms.Select(attrs={
                 'class': 'form-select'
             }),
+            'address_line_1': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Street address, P.O. box, company name'
+            }),
+            'address_line_2': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Apartment, suite, unit, building, floor, etc.'
+            }),
+            'city': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'City or town'
+            }),
+            'state_province': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'State or province'
+            }),
+            'postal_code': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'ZIP or postal code'
+            }),
+            'country': forms.TextInput(attrs={
+                'class': 'form-control',
+                'value': 'India'
+            }),
+            'contact_phone': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Primary phone number'
+            }),
+            'contact_email': forms.EmailInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Email address'
+            }),
+            'alternate_phone': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Alternate phone number (optional)'
+            }),
             'property_type': forms.Select(attrs={
+                'class': 'form-select'
+            }),
+            'payment_method': forms.Select(attrs={
                 'class': 'form-select'
             }),
             'service_description': forms.Textarea(attrs={
                 'class': 'form-control',
                 'rows': 4,
-                'placeholder': 'Please describe the service you need in detail...'
+                'placeholder': 'Please describe the electrical issue or service you need...'
             }),
             'special_requirements': forms.Textarea(attrs={
                 'class': 'form-control',
                 'rows': 3,
-                'placeholder': 'Any special requirements, access instructions, or additional notes...'
-            }),
-            'payment_method': forms.Select(attrs={
-                'class': 'form-select'
+                'placeholder': 'Any special requirements or notes...'
             }),
         }
-    
+
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
-        
-        # Set minimum date to today
         self.fields['preferred_date'].widget.attrs['min'] = date.today().isoformat()
-        
-        # Set choices for select fields
-        self.fields['preferred_time_slot'].choices = [
-            ('', 'Select time slot'),
-            ('morning', 'Morning (8 AM - 12 PM)'),
-            ('afternoon', 'Afternoon (12 PM - 4 PM)'),
-            ('evening', 'Evening (4 PM - 8 PM)'),
-            ('flexible', 'Flexible'),
-        ]
-        
-        self.fields['property_type'].choices = [
-            ('', 'Select property type'),
-            ('residential', 'Residential'),
-            ('commercial', 'Commercial'),
-            ('industrial', 'Industrial'),
-            ('other', 'Other'),
-        ]
-        
-        self.fields['payment_method'].choices = [
-            ('', 'Select payment method'),
-            ('cash', 'Cash'),
-            ('card', 'Credit/Debit Card'),
-            ('bank_transfer', 'Bank Transfer'),
-            ('online_payment', 'Online Payment'),
-            ('check', 'Check'),
-        ]
-        
-        # Pre-fill contact information if user has profile
-        if self.user and self.user.is_authenticated:
-            try:
-                profile = self.user.profile
-                if profile:
-                    self.fields['contact_phone'].initial = profile.phone_number
-                    self.fields['contact_email'].initial = self.user.email
-                    if profile.address_line_1:
-                        self.fields['address_line_1'].initial = profile.address_line_1
-                    if profile.address_line_2:
-                        self.fields['address_line_2'].initial = profile.address_line_2
-                    if profile.city:
-                        self.fields['city'].initial = profile.city
-                    if profile.state_province_region:
-                        self.fields['state_province'].initial = profile.state_province_region
-                    if profile.postal_code:
-                        self.fields['postal_code'].initial = profile.postal_code
-                    if profile.country:
-                        self.fields['country'].initial = profile.country
-            except UserProfile.DoesNotExist:
-                pass
-    
+
     def clean_preferred_date(self):
         preferred_date = self.cleaned_data.get('preferred_date')
         if preferred_date and preferred_date < date.today():
             raise forms.ValidationError("Preferred date cannot be in the past.")
         return preferred_date
-    
+
     def clean_contact_phone(self):
         phone = self.cleaned_data.get('contact_phone')
         if phone:
-            # Clean phone number (remove spaces, dashes, etc.)
             cleaned_phone = re.sub(r'[\s\-\(\)]', '', phone)
             if len(cleaned_phone) < 10:
                 raise forms.ValidationError("Please enter a valid phone number (at least 10 digits).")
@@ -346,7 +300,6 @@ class ServiceBookingForm(forms.ModelForm):
     def clean_alternate_phone(self):
         phone = self.cleaned_data.get('alternate_phone')
         if phone:
-            # Clean phone number (remove spaces, dashes, etc.)
             cleaned_phone = re.sub(r'[\s\-\(\)]', '', phone)
             if len(cleaned_phone) < 10:
                 raise forms.ValidationError("Please enter a valid alternate phone number (at least 10 digits).")

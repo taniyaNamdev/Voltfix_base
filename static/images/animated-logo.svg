@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="60" viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Animated background circle -->
+  <circle cx="30" cy="30" r="25" fill="none" stroke="#1f2937" stroke-width="2" opacity="0.3">
+    <animate attributeName="r" from="0" to="25" dur="1s" begin="0s" fill="freeze"/>
+  </circle>
+  
+  <!-- Animated red border circle -->
+  <circle cx="30" cy="30" r="25" fill="none" stroke="#dc2626" stroke-width="2" stroke-dasharray="157" stroke-dashoffset="157">
+    <animate attributeName="stroke-dashoffset" from="157" to="0" dur="1.5s" begin="0.5s" fill="freeze"/>
+  </circle>
+  
+  <!-- Animated electrical plug body -->
+  <rect x="25" y="20" width="10" height="15" rx="2" fill="#dc2626" opacity="0">
+    <animate attributeName="opacity" from="0" to="1" dur="0.5s" begin="1.5s" fill="freeze"/>
+  </rect>
+  
+  <!-- Animated plug pins -->
+  <rect x="23" y="35" width="4" height="8" rx="2" fill="#dc2626" opacity="0">
+    <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="2s" fill="freeze"/>
+  </rect>
+  <rect x="33" y="35" width="4" height="8" rx="2" fill="#dc2626" opacity="0">
+    <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="2.2s" fill="freeze"/>
+  </rect>
+  
+  <!-- Animated electrical connection line -->
+  <path d="M30 15 L30 20" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-dasharray="5" stroke-dashoffset="5">
+    <animate attributeName="stroke-dashoffset" from="5" to="0" dur="0.5s" begin="2.5s" fill="freeze"/>
+  </path>
+  
+  <!-- Animated VOLT text -->
+  <text x="70" y="28" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#1f2937" opacity="0">
+    <animate attributeName="opacity" from="0" to="1" dur="0.8s" begin="2.8s" fill="freeze"/>
+    VOLT
+  </text>
+  
+  <!-- Animated FIX text -->
+  <text x="70" y="45" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#dc2626" opacity="0">
+    <animate attributeName="opacity" from="0" to="1" dur="0.8s" begin="3.2s" fill="freeze"/>
+    FIX
+  </text>
+  
+  <!-- Animated electrical spark -->
+  <path d="M160 20 L165 25 L160 30 M165 25 L170 20 M165 25 L170 30" 
+        stroke="#dc2626" stroke-width="2" stroke-linecap="round" opacity="0">
+    <animate attributeName="opacity" from="0" to="0.7" dur="0.5s" begin="3.6s" fill="freeze"/>
+    <animate attributeName="opacity" values="0.7;0;0.7" dur="2s" begin="4.1s" repeatCount="indefinite"/>
+  </path>
+</svg> 

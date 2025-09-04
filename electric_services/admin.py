@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.db.models import Count, Sum, Avg
 from django.contrib.admin import SimpleListFilter
-from .models import UserProfile, ServiceCategory, ElectricService, ProductCategory, ElectricProduct, ProductReview, ShoppingCart, CartItem, ServiceBooking, QuoteRequest
+from .models import UserProfile, ServiceCategory, ElectricService, ProductCategory, ElectricProduct, ProductReview, ShoppingCart, CartItem, ServiceBooking, QuoteRequest, Payment, Order, OrderItem
 from django.utils import timezone
 
 # Custom Admin Site Configuration
@@ -354,84 +354,126 @@ ElectricProductAdmin.actions = [make_featured, make_not_featured, activate_produ
 
 @admin.register(ServiceBooking)
 class ServiceBookingAdmin(admin.ModelAdmin):
-    list_display = ['user', 'service', 'status', 'priority', 'preferred_date', 'contact_phone', 'city', 'estimated_cost']
-    list_filter = ['status', 'priority', 'property_type', 'payment_method', 'payment_status', 'preferred_date', 'booked_at']
+    list_display = ['user', 'service', 'status', 'preferred_date', 'preferred_time_slot', 'contact_phone', 'estimated_cost']
+    list_filter = ['status', 'payment_status', 'property_type', 'preferred_date', 'created_at']
     search_fields = ['user__username', 'user__email', 'contact_phone', 'contact_email', 'address_line_1', 'city', 'service_description']
-    readonly_fields = ['booked_at', 'updated_at']
+    readonly_fields = ['created_at', 'updated_at', 'full_address']
     list_per_page = 20
-    date_hierarchy = 'booked_at'
-    
+    date_hierarchy = 'created_at'
+
     fieldsets = (
         ('Basic Information', {
-            'fields': ('user', 'service', 'status', 'priority')
+            'fields': ('user', 'service', 'status')
         }),
-        ('Location Details', {
-            'fields': ('address_line_1', 'address_line_2', 'city', 'state_province', 'postal_code', 'country')
+        ('Address Information', {
+            'fields': ('address_line_1', 'address_line_2', 'city', 'state_province', 'postal_code', 'country', 'full_address')
         }),
         ('Contact Information', {
-            'fields': ('contact_phone', 'contact_email', 'alternate_phone')
+            'fields': ('contact_phone', 'contact_email', 'alternate_phone', 'property_type')
         }),
         ('Scheduling', {
-            'fields': ('preferred_date', 'preferred_time_slot', 'scheduled_date', 'completed_date')
+            'fields': ('preferred_date', 'preferred_time', 'preferred_time_slot')
         }),
         ('Service Details', {
-            'fields': ('property_type', 'service_description', 'special_requirements')
+            'fields': ('service_description', 'special_requirements')
         }),
-        ('Pricing & Payment', {
-            'fields': ('estimated_cost', 'final_cost', 'payment_method', 'payment_status')
+        ('Payment Information', {
+            'fields': ('payment_method', 'estimated_cost', 'final_cost', 'payment_status', 'payment')
         }),
-        ('Administration', {
-            'fields': ('assigned_technician', 'admin_notes'),
+        ('Legacy Fields', {
+            'fields': ('address', 'phone_number', 'description'),
             'classes': ('collapse',)
         }),
         ('Timestamps', {
-            'fields': ('booked_at', 'updated_at'),
+            'fields': ('created_at', 'updated_at'),
             'classes': ('collapse',)
         }),
     )
-    
+
     actions = [
         'mark_as_pending', 'mark_as_confirmed', 'mark_as_in_progress', 
         'mark_as_completed', 'mark_as_cancelled', 'mark_as_paid'
     ]
-    
+
     def mark_as_pending(self, request, queryset):
         queryset.update(status='pending')
     mark_as_pending.short_description = "Mark selected bookings as pending"
-    
+
     def mark_as_confirmed(self, request, queryset):
         queryset.update(status='confirmed')
     mark_as_confirmed.short_description = "Mark selected bookings as confirmed"
-    
+
     def mark_as_in_progress(self, request, queryset):
         queryset.update(status='in_progress')
     mark_as_in_progress.short_description = "Mark selected bookings as in progress"
-    
+
     def mark_as_completed(self, request, queryset):
-        queryset.update(status='completed', completed_date=timezone.now())
+        queryset.update(status='completed')
     mark_as_completed.short_description = "Mark selected bookings as completed"
-    
+
     def mark_as_cancelled(self, request, queryset):
         queryset.update(status='cancelled')
     mark_as_cancelled.short_description = "Mark selected bookings as cancelled"
-    
+
     def mark_as_paid(self, request, queryset):
         queryset.update(payment_status='paid')
     mark_as_paid.short_description = "Mark selected bookings as paid"
+
+@admin.register(Payment)
+class PaymentAdmin(admin.ModelAdmin):
+    list_display = ['user', 'payment_type', 'razorpay_order_id', 'amount', 'currency', 'status', 'created_at']
+    list_filter = ['payment_type', 'status', 'currency', 'created_at']
+    search_fields = ['user__username', 'user__email', 'razorpay_order_id', 'razorpay_payment_id']
+    readonly_fields = ['created_at', 'updated_at']
+    list_per_page = 20
     
-    def get_queryset(self, request):
-        return super().get_queryset(request).select_related('user', 'service', 'assigned_technician')
+    fieldsets = (
+        ('Payment Information', {
+            'fields': ('user', 'payment_type', 'amount', 'currency')
+        }),
+        ('Razorpay Details', {
+            'fields': ('razorpay_order_id', 'razorpay_payment_id')
+        }),
+        ('Status', {
+            'fields': ('status',)
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ['order_number', 'user', 'total_amount', 'gst_amount', 'status', 'created_at']
+    list_filter = ['status', 'created_at']
+    search_fields = ['order_number', 'user__username', 'user__email', 'phone_number']
+    readonly_fields = ['order_number', 'created_at', 'updated_at']
+    list_per_page = 20
     
-    def full_address(self, obj):
-        return obj.full_address
-    full_address.short_description = 'Full Address'
+    fieldsets = (
+        ('Order Information', {
+            'fields': ('user', 'payment', 'order_number', 'status')
+        }),
+        ('Pricing', {
+            'fields': ('total_amount', 'gst_amount')
+        }),
+        ('Shipping Information', {
+            'fields': ('shipping_address', 'phone_number')
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        }),
+    )
+
+@admin.register(OrderItem)
+class OrderItemAdmin(admin.ModelAdmin):
+    list_display = ['order', 'product', 'quantity', 'price', 'gst_rate', 'gst_amount', 'total_price_display']
+    list_filter = ['gst_rate', 'order__status']
+    search_fields = ['order__order_number', 'product__name']
+    readonly_fields = ['total_price_display']
     
-    def is_emergency(self, obj):
-        return obj.is_emergency
-    is_emergency.boolean = True
-    is_emergency.short_description = 'Emergency'
-    
-    def is_overdue(self, obj):
-        return obj.is_overdue
-    is_overdue.boolean = True
-    is_overdue.short_description = 'Overdue'
+    def total_price_display(self, obj):
+        return f"₹{obj.total_price}"
+    total_price_display.short_description = 'Total Price'

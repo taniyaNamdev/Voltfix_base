@@ -397,3 +397,11 @@ JAZZMIN_UI_TWEAKS = {
     },
     "actions_sticky_top": True,
 }
+
+# Razorpay Configuration
+RAZORPAY_KEY_ID = os.getenv('RAZORPAY_KEY_ID', 'rzp_test_YOUR_TEST_KEY_ID')
+RAZORPAY_KEY_SECRET = os.getenv('RAZORPAY_KEY_SECRET', 'YOUR_TEST_KEY_SECRET')
+
+# For production, use these environment variables:
+# RAZORPAY_KEY_ID = os.getenv('RAZORPAY_KEY_ID')
+# RAZORPAY_KEY_SECRET = os.getenv('RAZORPAY_KEY_SECRET')
